@@ -10,7 +10,10 @@
     },
     "dependencies": {
         "express": "^4.16.1",
-        "node-ical": "^0.15.1"
+        "node-ical": "^0.15.1",
+        "tar": "^6.1.11",
+        "tar-fs": "^2.1.1",
+        "xml2js": "^0.4.23"
     },
     "devDependencies": {
         "jest": "^28.1.0"
