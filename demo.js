@@ -1,5 +1,5 @@
 var MoodleQuiz = require('./app/models/moodle_quiz')
-const { extractTar, fetchActivities, updateActivities,repackageToMBZ } = require("./app/xml_reader")
+const { extractTar, fetchActivities, updateActivities,repackageToMBZ } = require("./utils/xmlReader")
 
 var path = "data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz"
 var new_path = "tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu/"

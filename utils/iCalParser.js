@@ -19,6 +19,7 @@ class iCalParser {
       `Groupe=${this.group}&` + 
       `Session=${this.year + this.semesterSeason}&`
     );
+
     const url = await ical.async.fromURL(BASE_URL + params.toString());
     
     var seminars = [];

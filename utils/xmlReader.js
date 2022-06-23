@@ -1,6 +1,6 @@
-var MoodleActivity = require('./models/moodle_activity')
-var MoodleQuiz = require('./models/moodle_quiz')
-var MoodleAssignment = require('./models/moodle_assignment')
+var MoodleActivity = require('../app/models/moodle_activity')
+var MoodleQuiz = require('../app/models/moodle_quiz')
+var MoodleAssignment = require('../app/models/moodle_assignment')
 var archiver = require('archiver');
 var fs = require('fs')
 var path = require('path')
@@ -95,6 +95,9 @@ function fetchActivities(file_path) {
 
 function updateActivities(file_path, activities){
     for(let i=0; i<activities.length; i++){
+        // TODO change path string creation by using the path module (path.join()) -> otherwise, the path string is Windows incompatible.
+        // Instead of doing activities+modulename, maybe use the directory attribute present in the classes.
+
         let path = (file_path+"activities"+ "/" +activities[i].getModuleName()+"_"+activities[i].getModuleId()+"/" +activities[i].getModuleName()+".xml")
         var xml_data = fs.readFileSync(path)   
             xml2js.parseString(xml_data, function (err, data) {
