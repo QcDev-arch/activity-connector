@@ -51,6 +51,7 @@ describe('DSL DATE PARSER', () => {
         updateActivities(NEW_PATH, activities)
         repackageToMBZ(NEW_PATH)
 
+        // To be continued... I need some code changes to xmlReader present in another PR to correctly make the tests for this code part.
         expect(1).toBe(1);
     });
 });
