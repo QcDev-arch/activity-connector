@@ -136,7 +136,7 @@ function updateActivities(file_path, activities){
 function repackageToMBZ(file_path){
 
     var updatedate = new Date();
-    var updatedate = updatedate.getDay()+'-'+(updatedate.getMonth()+1)+'_'+updatedate.getHours()+':'+updatedate.getMinutes()
+    var updatedate = updatedate.getDay()+'-'+(updatedate.getMonth()+1)+'_'+updatedate.getHours()+'_'+updatedate.getMinutes()
 
     var output = fs.createWriteStream('mbzPackages/'+'moodle-backup-'+ updatedate + '.mbz');
     var archive = archiver('zip');
