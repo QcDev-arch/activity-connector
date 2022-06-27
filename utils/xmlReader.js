@@ -186,10 +186,15 @@ function repackageToMBZ(file_path) {
     ':' +
     updatedate.getMinutes();
 
+<<<<<<< HEAD
   var output = fs.createWriteStream(
     'mbzPackages/' + 'moodle-backup-' + updatedate + '.mbz',
   );
   var archive = archiver('zip');
+=======
+    var updatedate = new Date();
+    var updatedate = updatedate.getDay()+'-'+(updatedate.getMonth()+1)+'_'+updatedate.getHours()+'_'+updatedate.getMinutes()
+>>>>>>> b48ad7ab054cddc25054ff76ee747cc7b585d84b
 
   output.on('close', function () {
     console.log(archive.pointer() + ' total bytes');
