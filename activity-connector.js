@@ -13,9 +13,6 @@ const {
 } = require('./utils/xmlReader');
 const iCalParser = require('./utils/iCalParser');
 
-const TEST_URL =
-  'https://portail.etsmtl.ca/ICal/SeancesCours?typeact=C&Sigle=LOG210&Groupe=01&Session=20222';
-
 program
   .command('extract')
   .description('Extracts [.mbz file] to the tmp directory')
@@ -35,7 +32,7 @@ program
     console.log(fetchActivities(directoryPath));
   });
 
-// ./activity-connector.js print-icl C log210 01 2022 2
+// ./activity-connector.js print-ics C log210 01 2022 2
 program
   .command('print-ics')
   .description(
@@ -80,14 +77,6 @@ program
   ) {
     string = fs.readFileSync(dslFilePath, { encoding: 'utf8' });
     ical = new iCalParser(typeact, symbol, group, year, semesterSeason);
-    // calendarActivities = await ical.parse();
-    // console.log(
-    //   dslDateParser.getListModifiedTimes(
-    //     calendarActivities,
-    //     DSLParser.parse(string)[1],
-    //   ),
-    // );
-
     ical.parse().then(ics => {
       console.log(
         dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
