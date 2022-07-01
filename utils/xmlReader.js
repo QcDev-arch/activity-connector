@@ -175,38 +175,19 @@ function updateActivities(file_path, activities) {
   }
 }
 
-function repackageToMBZ(file_path) {
+async function repackageToMBZ(file_path) {
   var updatedate = new Date();
-  var updatedate =
-    updatedate.getDay() +
-    '-' +
-    (updatedate.getMonth() + 1) +
-    '_' +
-    updatedate.getHours() +
-    ':' +
-    updatedate.getMinutes();
-
-  var updatedate = new Date();
-  var updatedate =
-    updatedate.getDay() +
-    '-' +
-    (updatedate.getMonth() + 1) +
-    '_' +
-    updatedate.getHours() +
-    '_' +
-    updatedate.getMinutes();
-
-  var output = fs.createWriteStream(
-    path.join('mbzPackages/', 'moodle-backup-', updatedate, '.mbz'),
-  );
+  var datestring = updatedate.getDay()+'-'+(updatedate.getMonth()+1)+'_'+updatedate.getHours()+'_'+updatedate.getMinutes()
+  var mbzPath = path.join("mbzPackages", "moodle-backup-" + datestring + ".mbz")
+  var output = fs.createWriteStream(mbzPath);
   var archive = archiver('zip');
 
   output.on('close', function () {
-    console.log(archive.pointer() + ' total bytes');
+      // console.log(archive.pointer() + ' total bytes');
   });
 
-  archive.on('error', function (err) {
-    throw err;
+  archive.on('error', function(err){
+      throw err;
   });
 
   archive.pipe(output);
@@ -214,6 +195,8 @@ function repackageToMBZ(file_path) {
   archive.directory(file_path, false);
 
   archive.finalize();
+
+  return mbzPath
 }
 
 module.exports = {
