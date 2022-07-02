@@ -105,6 +105,7 @@ dist
 
 # Tmp folder
 tmp/
+mbzPackages/
 
 # Mac folder system
 **/.DS_Store

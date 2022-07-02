@@ -1,16 +1,23 @@
 {
-    "name": "docker_web_app",
+    "name": "activity-connector",
     "version": "1.0.0",
-    "description": "Node.js on Docker",
+    "description": "Activity connector for Moodle",
     "author": "First Last <first.last@example.com>",
-    "main": "server.js",
+    "main": "activitiy-connector.js",
+    "bin": {
+        "activity-connector": "./activity-connector.js"
+    },
     "scripts": {
         "start": "node server.js",
         "test": "jest"
     },
     "dependencies": {
+        "archiver": "^5.3.1",
+        "commander": "^9.3.0",
         "express": "^4.16.1",
+        "moment": "^2.29.3",
         "node-ical": "^0.15.1",
+        "pegjs": "^0.10.0",
         "tar": "^6.1.11",
         "tar-fs": "^2.1.1",
         "xml2js": "^0.4.23"
