@@ -13,14 +13,15 @@ const {
   updateActivities,
   repackageToMBZ,
 } = require("./utils/xmlReader");
+const {TRIMESTERS} = require("./utils/constants");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
   switch (semesterSeason) {
-    case "Winter":
+    case TRIMESTERS.WINTER:
       return 1;
-    case "Summer":
+    case TRIMESTERS.SUMMER:
       return 2;
-    case "Fall":
+    case TRIMESTERS.FALL:
       return 3;
     default:
       // TODO add exception handling

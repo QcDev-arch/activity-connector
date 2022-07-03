@@ -7,6 +7,9 @@ const path = require('path');
 const tar = require('tar');
 const xml2js = require('xml2js');
 const base_path = './tmp';
+const { SPLITTER_TYPE, MBZ_FILE_EXTENSION, EMPTY,
+  ENCODING_TYPE, INPUT_XML_FILES, ACTIVITY_MODULE_TYPES
+} = require('./constants');
 
 function extractTar(file_path) {
   // Checks if tmp directory exists
@@ -14,11 +17,11 @@ function extractTar(file_path) {
     fs.mkdirSync(base_path);
   }
   // Check if mbz file exists, then extract to tmp directory
-  if (file_path.endsWith('.mbz')) {
+  if (file_path.endsWith(MBZ_FILE_EXTENSION)) {
     try {
       const new_directory = path.join(
           base_path,
-          file_path.split('data').pop().replace('.mbz', ''),
+          file_path.split(SPLITTER_TYPE.DATA).pop().replace(MBZ_FILE_EXTENSION, EMPTY),
       );
       if (!fs.existsSync(new_directory)) {
         fs.mkdirSync(new_directory);
@@ -36,8 +39,8 @@ function extractTar(file_path) {
 }
 
 function fetchQuizInfo(file_path, directory) {
-  const quizPath = path.join(file_path, directory, 'quiz.xml');
-  const data = fs.readFileSync(quizPath, 'utf-8');
+  const quizPath = path.join(file_path, directory, INPUT_XML_FILES.QUIZ);
+  const data = fs.readFileSync(quizPath, ENCODING_TYPE);
   let quiz_info;
   xml2js.parseString(data, function (err, data) {
     quiz_info = {
@@ -50,8 +53,8 @@ function fetchQuizInfo(file_path, directory) {
 }
 
 function fetchAssignInfo(file_path, directory) {
-  const assignPath = path.join(file_path, directory, 'assign.xml');
-  const data = fs.readFileSync(assignPath, 'utf-8');
+  const assignPath = path.join(file_path, directory, INPUT_XML_FILES.ASSIGNMENT);
+  const data = fs.readFileSync(assignPath, ENCODING_TYPE);
   let assign_info;
   xml2js.parseString(data, function (err, data) {
     assign_info = {
@@ -68,8 +71,8 @@ function fetchActivities(file_path) {
   const activities = [];
 
   const xml_data = fs.readFileSync(
-      path.join(file_path, 'moodle_backup.xml'),
-      'utf-8',
+      path.join(file_path, INPUT_XML_FILES.MOODLE_BACKUP),
+      ENCODING_TYPE,
   );
   xml2js.parseString(xml_data, function (err, data) {
     for (const obj of data['moodle_backup']['information'][0]['contents'][0][
@@ -140,7 +143,7 @@ function updateActivities(file_path, activities) {
     const xml_data = fs.readFileSync(path);
     xml2js.parseString(xml_data, function (err, data) {
       switch (activities[i].getModuleName()) {
-        case 'quiz':
+        case ACTIVITY_MODULE_TYPES.QUIZ:
           data['activity']['quiz'][0].timeopen = [activities[i].getTimeOpen()];
           data['activity']['quiz'][0].timeclose = [
             activities[i].getTimeClose(),
@@ -155,7 +158,7 @@ function updateActivities(file_path, activities) {
             }
           });
           break;
-        case 'assign':
+        case ACTIVITY_MODULE_TYPES.ASSIGNMENT:
           data['activity']['assign'][0].duedate = [activities[i].getDueDate()];
           data['activity']['assign'][0].allowsubmissionsfromdate = [
             activities[i].getAllowSubmissionsFromDate(),
@@ -176,7 +179,7 @@ function updateActivities(file_path, activities) {
 }
 
 async function repackageToMBZ(file_path) {
-  const mbzPath = path.join("mbzPackages", "moodle-backup-" + dateToMbzString(new Date()) + ".mbz");
+  const mbzPath = path.join("mbzPackages", "moodle-backup-" + dateToMbzString(new Date()) + MBZ_FILE_EXTENSION);
   const output = fs.createWriteStream(mbzPath);
   const archive = archiver('zip');
 

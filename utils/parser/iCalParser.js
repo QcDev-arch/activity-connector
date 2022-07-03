@@ -4,6 +4,7 @@ const {
   Laboratory,
   Practicum,
 } = require('../../app/models/calendarActivity');
+const {ICAL_ACTIVITY_TYPES} = require("../constants");
 
 const BASE_URL = 'https://portail.etsmtl.ca/ICal/SeancesCours?';
 
@@ -33,13 +34,13 @@ class iCalParser {
     for (const event of Object.values(url)) {
       if (event.type == 'VEVENT') {
         switch (event.categories[0]) {
-          case 'C        ': // categories: [ 'C        ' ] -> very doodoo
+          case ICAL_ACTIVITY_TYPES.SEMINAR: // categories: [ 'C        ' ] -> very doodoo
             seminars.push(new Seminar(event));
             break;
-          case 'TP':
+          case ICAL_ACTIVITY_TYPES.PRACTICUM:
             practicums.push(new Practicum(event));
             break;
-          case 'Labo':
+          case ICAL_ACTIVITY_TYPES.LABORATORY:
             laboratories.push(new Laboratory(event));
             break;
           default:

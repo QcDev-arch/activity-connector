@@ -9,55 +9,7 @@ const {
 } = require('../xmlReader');
 const MoodleQuiz = require('../../app/models/moodleQuiz');
 const { CalendarActivityNotFound } = require('../../app/exceptions');
-
-const path =
-    'data/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu.mbz';
-const new_path =
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/';
-
-// Uncomment the lines below to test in the terminal using "node ./utils/dslDateParser.js"
-const test = async function () {
-  const string = fs.readFileSync('./data/test.dsl', {encoding: 'utf8'});
-  const iCal = new iCalParser('', 'LOG210', '01', '2022', '2');
-  const calendarActivities = await iCal.parse();
-  const newTimes = getListModifiedTimes(
-      calendarActivities,
-      dslParser.parse(string)[1],
-  );
-  console.log(newTimes);
-
-  const activities = fetchActivities(
-      'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu',
-  );
-  console.log(activities);
-
-  for (const obj of newTimes) {
-    if (obj.activity.includes('Quiz')) {
-      const index = Number.parseInt(obj.activity.split(' ')[2]) - 1;
-      let i = 0;
-      for (const activity of activities) {
-        if (activity instanceof MoodleQuiz) {
-          if (i == index) {
-            activity.setTimeOpen(`${obj.open.getTime() / 1000}`);
-            activity.setTimeClose(`${obj.close.getTime() / 1000}`);
-            break;
-          }
-          i++;
-        }
-      }
-    }
-  }
-  console.log(activities);
-
-  updateActivities(
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/',
-    activities,
-  );
-  repackageToMBZ(
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/',
-  );
-};
-// test()
+const { ACTIVITY_TYPES, ASSIGNMENT_TYPES, DATES, OPERATION_TYPES, SPLITTER_TYPE } = require('../constants');
 
 // Parses the calendar activities and peg grammar to return an array containing the new dates to change for each activity
 // This is the main function to call to change the actual dates of moodle activities.
@@ -66,11 +18,11 @@ const getListModifiedTimes = function (calendarActivities, pegObj) {
   for (const obj of pegObj) {
     const activity = obj.activity;
     let dateObj = {};
-    if (activity.includes('Quiz'))
+    if (activity.includes(ASSIGNMENT_TYPES.QUIZ))
       dateObj = getNewQuizDates(obj, calendarActivities);
-    if (activity.includes('Homework'))
+    if (activity.includes(ASSIGNMENT_TYPES.HOMEWORK))
       dateObj = getNewHomeworkDates(obj, calendarActivities);
-    if (activity.includes('Exam'))
+    if (activity.includes(ASSIGNMENT_TYPES.EXAM))
       dateObj = getNewExamDates(obj, calendarActivities);
     listModifiedTimes.push({ activity: activity, ...dateObj });
   }
@@ -80,10 +32,10 @@ const getListModifiedTimes = function (calendarActivities, pegObj) {
 // Parses the peg obj and returns the modified dates for a quiz
 const getNewQuizDates = function (obj, calendarActivities) {
   // Get pegObj info open
-  const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
+  const [openActivityName, openActivityNumber] = obj.open.activity.split(SPLITTER_TYPE.WHITESPACE);
   const openModifier = obj.open.modifier;
   const openTimeObj = obj.open.time;
-  // Get correct calendar activity for oepn date
+  // Get correct calendar activity for open date
   const openCalendarAct = getCalendarActivity(
       calendarActivities,
       openActivityName,
@@ -92,10 +44,10 @@ const getNewQuizDates = function (obj, calendarActivities) {
 
   // Get pegObj info close
   const [closeActivityName, closeActivityNumber] =
-    obj.close.activity.split(' ');
+    obj.close.activity.split(SPLITTER_TYPE.WHITESPACE);
   const closeModifier = obj.close.modifier;
   const closeTimeObj = obj.close.time;
-  // Get correct calendar activity for oepn date
+  // Get correct calendar activity for open date
   const closeCalendarAct = getCalendarActivity(
       calendarActivities,
       closeActivityName,
@@ -119,7 +71,7 @@ const getNewQuizDates = function (obj, calendarActivities) {
 // Parses the peg obj and returns the modified dates for an exam
 const getNewExamDates = function (obj, calendarActivities) {
   // Get pegObj info open
-  const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
+  const [openActivityName, openActivityNumber] = obj.open.activity.split(SPLITTER_TYPE.WHITESPACE);
   const openModifier = obj.open.modifier;
   const openTimeObj = obj.open.time;
   // Get correct calendar activity for open date
@@ -141,10 +93,10 @@ const getNewExamDates = function (obj, calendarActivities) {
 // Parses the peg obj and returns the modified dates for a homework
 const getNewHomeworkDates = function (obj, calendarActivities) {
   // Get pegObj info open
-  const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
+  const [openActivityName, openActivityNumber] = obj.open.activity.split(SPLITTER_TYPE.WHITESPACE);
   const openModifier = obj.open.modifier;
   const openTimeObj = obj.open.time;
-  // Get correct calendar activity for oepn date
+  // Get correct calendar activity for open date
   const openCalendarAct = getCalendarActivity(
       calendarActivities,
       openActivityName,
@@ -152,10 +104,10 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
   );
 
   // Get pegObj info due
-  const [dueActivityName, dueActivityNumber] = obj.due.activity.split(' ');
+  const [dueActivityName, dueActivityNumber] = obj.due.activity.split(SPLITTER_TYPE.WHITESPACE);
   const dueModifier = obj.due.modifier;
   const dueTimeObj = obj.due.time;
-  // Get correct calendar activity for oepn date
+  // Get correct calendar activity for open date
   const dueCalendarAct = getCalendarActivity(
       calendarActivities,
       dueActivityName,
@@ -164,10 +116,10 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
 
   // Get pegObj info due
   const [cutoffActivityName, cutoffActivityNumber] =
-    obj.cutoff.activity.split(' ');
+    obj.cutoff.activity.split(SPLITTER_TYPE.WHITESPACE);
   const cutoffModifier = obj.cutoff.modifier;
   const cutoffTimeObj = obj.cutoff.time;
-  // Get correct calendar activity for oepn date
+  // Get correct calendar activity for open date
   const cutoffCalendarAct = getCalendarActivity(
       calendarActivities,
       cutoffActivityName,
@@ -201,15 +153,15 @@ const getCalendarActivity = function (
 ) {
   let activity;
   switch (activityName) {
-    case 'Seminar':
+    case ACTIVITY_TYPES.SEMINAR:
       activity =
         calendarActivities.seminars[Number.parseInt(activityNumber) - 1];
       break;
-    case 'Laboratory':
+    case ACTIVITY_TYPES.LABORATORY:
       activity =
         calendarActivities.laboratories[Number.parseInt(activityNumber) - 1];
       break;
-    case 'Practicum':
+    case ACTIVITY_TYPES.PRACTICUM:
       activity =
         calendarActivities.practicums[Number.parseInt(activityNumber) - 1];
       break;
@@ -228,10 +180,10 @@ const getCalendarActivity = function (
 const modifyTime = function (calendarAct, modifier, timeObj) {
   let newDate;
   switch (modifier) {
-    case 'start':
+    case DATES.START_DATE:
       newDate = moment(calendarAct.startDate);
       break;
-    case 'end':
+    case DATES.END_DATE:
       newDate = moment(calendarAct.endDate);
       break;
     case undefined:
@@ -239,15 +191,15 @@ const modifyTime = function (calendarAct, modifier, timeObj) {
   }
   if (timeObj) {
     switch (timeObj.modifier) {
-      case '+':
+      case OPERATION_TYPES.ADD:
         newDate = newDate.clone().add(timeObj.number, timeObj.type);
         break;
-      case '-':
+      case OPERATION_TYPES.SUBTRACT:
         newDate = newDate.clone().subtract(timeObj.number, timeObj.type);
         break;
     }
     if (timeObj.at) {
-      const [hours, minutes] = timeObj.at.split(':');
+      const [hours, minutes] = timeObj.at.split(SPLITTER_TYPE.COLON);
       newDate.hours(Number.parseInt(hours)).minutes(Number.parseInt(minutes));
     }
   }
