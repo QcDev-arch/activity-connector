@@ -2,7 +2,7 @@
 const MoodleActivity = require('../../app/models/moodle_activity');
 const MoodleAssignement = require('../../app/models/moodle_assignment');
 const MoodleQuiz = require('../../app/models/moodle_quiz');
-const { extractTar, fetchActivities, updateActivities, repackageToMBZ } = require("../../utils/xmlReader")
+const { extractTar, fetchActivities, updateActivities, repackageToMBZ } = require("../../app/utils/xmlReader")
 const fs = require('fs')
 const PATH = "data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz"
 const NEW_PATH = "tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu/"

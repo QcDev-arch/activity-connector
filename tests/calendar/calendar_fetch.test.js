@@ -1,5 +1,5 @@
 /* Calendar requirements */
-const iCalParser = require('../../utils/iCalParser');
+const iCalParser = require('../../app/utils/iCalParser');
 
 const activityTypes = ['', 'C', 'TP', 'LABO'];
 var symbol = 'log210';

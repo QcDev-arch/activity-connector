@@ -3,16 +3,18 @@ const path = require("path");
 const program = require("commander");
 const fs = require("fs");
 
-const dslDateParser = require("./utils/dslDateParser");
-const DSLParser = require("./utils/dsl-parser");
-const iCalParser = require("./utils/iCalParser");
+const dslDateParser = require("./app/utils/dslDateParser");
+const DSLParser = require("./app/utils/dsl-parser");
+const iCalParser = require("./app/utils/iCalParser");
 const MoodleQuiz = require("./app/models/moodle_quiz");
 const {
   extractTar,
   fetchActivities,
   updateActivities,
   repackageToMBZ,
-} = require("./utils/xmlReader");
+} = require("./app/utils/xmlReader");
+
+const { InvalidSemesterSeason } = require("./app/exceptions");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
   switch (semesterSeason) {
@@ -23,12 +25,7 @@ const getSemesterSeasonNumber = function (semesterSeason) {
     case "Fall":
       return 3;
     default:
-      // TODO add exception handling
-      console.log(
-        "Wrong semester season, the options are Winter, Summer or Fall",
-      );
-      process.exitCode = 1;
-      return;
+      throw new InvalidSemesterSeason(semesterSeason);
   }
 };
 
@@ -37,9 +34,13 @@ program
   .description("Extracts [.mbz file] to the tmp directory")
   .argument("<file-path>", "the path to the .mbz file to extract")
   .action(function (filePath) {
-    console.log("Extracting .mbz file...");
-    extractTar(filePath);
-    console.log("Done!");
+    try{
+      console.log("Extracting .mbz file...");
+      extractTar(filePath);
+      console.log("Done!");
+    } catch (err) {
+      console.error(err.message)
+    }
   });
 
 // ./activity-connector.js print-dir data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
@@ -74,15 +75,18 @@ program
   )
   .option("-t, --typeact", "the activity type (such as C, Labo or TP)", "")
   .action(function (courseAcronym, group, year, semesterSeason, options) {
-    let icsParser = new iCalParser(
-      options.typeact,
-      courseAcronym,
-      group,
-      year,
-      getSemesterSeasonNumber(semesterSeason),
-    );
-
-    icsParser.parse().then(ics => console.log(ics));
+    try {
+      let icsParser = new iCalParser(
+        options.typeact,
+        courseAcronym,
+        group,
+        year,
+        getSemesterSeasonNumber(semesterSeason),
+      );
+      icsParser.parse().then(ics => console.log(ics));
+    } catch (err) {
+      console.error(err.message);
+    }
   });
 
 // ./activity-connector.js parse-dsl ./data/test.dsl LOG210 01 2022 Summer
@@ -115,19 +119,23 @@ program
     semesterSeason,
     options,
   ) {
-    string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
-    ical = new iCalParser(
-      options.typeact,
-      courseAcronym,
-      group,
-      year,
-      getSemesterSeasonNumber(semesterSeason),
-    );
-    ical.parse().then(ics => {
-      console.log(
-        dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+    try {
+      let string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
+      let ical = new iCalParser(
+        options.typeact,
+        courseAcronym,
+        group,
+        year,
+        getSemesterSeasonNumber(semesterSeason),
       );
-    });
+      ical.parse().then(ics => {
+        console.log(
+          dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+        );
+      });
+    } catch (err) {
+      console.error(err.message)
+    }
   });
 
 // ./activity-connector.js update data/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu.mbz data/test.dsl LOG210 01 2022 Summer
@@ -160,49 +168,65 @@ program
     year,
     semesterSeason,
   ) {
-    var string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
-    var ical = new iCalParser(
-      "",
-      courseAcronym,
-      group,
-      year,
-      getSemesterSeasonNumber(semesterSeason),
-    );
-    var calendarActivities = await ical.parse();
-    var newTimes = dslDateParser.getListModifiedTimes(
-      calendarActivities,
-      DSLParser.parse(string)[1],
-    );
-
-    var newPath = path.join(
-      "tmp",
-      mbzFilePath.split("\\").pop().split("/").pop().split(".mbz")[0],
-      "/",
-    );
-    extractTar(mbzFilePath);
-    var activities = fetchActivities(newPath);
-
-    // TODO Refactor into another file
-    // TODO only modifies quiz so far, have to cover the other classes
-    for (const obj of newTimes) {
-      if (obj.activity.includes("Quiz")) {
-        var index = Number.parseInt(obj.activity.split(" ")[2]) - 1;
-        let i = 0;
-        for (var activity of activities) {
-          if (activity instanceof MoodleQuiz) {
-            if (i == index) {
-              activity.setTimeOpen(`${obj.open.getTime() / 1000}`);
-              activity.setTimeClose(`${obj.close.getTime() / 1000}`);
-              break;
+    try{
+      let semesterSeasonNumber = getSemesterSeasonNumber(semesterSeason)
+      console.log("Fetching DSL...");
+      var string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
+  
+      console.log("Fetching .ics calendar...");
+      var ical = new iCalParser(
+        "",
+        courseAcronym,
+        group,
+        year,
+        semesterSeasonNumber,
+      );
+      var calendarActivities = await ical.parse();
+  
+      console.log("Parse DSL and getting new dates...");
+      var newTimes = dslDateParser.getListModifiedTimes(
+        calendarActivities,
+        DSLParser.parse(string)[1],
+      );
+  
+      var newPath = path.join(
+        "tmp",
+        mbzFilePath.split("\\").pop().split("/").pop().split(".mbz")[0],
+        "/",
+      );
+  
+      console.log("Extracting .mbz file...");
+      extractTar(mbzFilePath);
+      var activities = fetchActivities(newPath);
+  
+      // TODO Refactor into another file
+      // TODO only modifies quiz so far, have to cover the other classes
+      console.log("Modifying Moodle Activities...");
+      for (const obj of newTimes) {
+        if (obj.activity.includes("Quiz")) {
+          var index = Number.parseInt(obj.activity.split(" ")[2]) - 1;
+          let i = 0;
+          for (var activity of activities) {
+            if (activity instanceof MoodleQuiz) {
+              if (i == index) {
+                activity.setTimeOpen(`${obj.open.getTime() / 1000}`);
+                activity.setTimeClose(`${obj.close.getTime() / 1000}`);
+                break;
+              }
+              i++;
             }
-            i++;
           }
         }
       }
+      updateActivities(newPath, activities);
+  
+      console.log("Repackaging...");
+      let mbzPath = await repackageToMBZ(newPath);
+  
+      console.log("Done! The new .mbz file is in the following path:", mbzPath);
+    } catch (err) {
+      console.error(err.message)
     }
-
-    updateActivities(newPath, activities);
-    repackageToMBZ(newPath);
   });
 
 program.parse(process.argv);
