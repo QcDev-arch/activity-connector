@@ -1,12 +1,12 @@
-var MoodleActivity = require('../app/models/moodle_activity');
-var MoodleQuiz = require('../app/models/moodle_quiz');
-var MoodleAssignment = require('../app/models/moodle_assignment');
-var archiver = require('archiver');
-var fs = require('fs');
-var path = require('path');
-var tar = require('tar');
-var xml2js = require('xml2js');
-var base_path = './tmp';
+const MoodleActivity = require('../app/models/moodleActivity');
+const MoodleQuiz = require('../app/models/moodleQuiz');
+const MoodleAssignment = require('../app/models/moodleAssignment');
+const archiver = require('archiver');
+const fs = require('fs');
+const path = require('path');
+const tar = require('tar');
+const xml2js = require('xml2js');
+const base_path = './tmp';
 
 function extractTar(file_path) {
   // Checks if tmp directory exists
@@ -16,9 +16,9 @@ function extractTar(file_path) {
   // Check if mbz file exists, then extract to tmp directory
   if (file_path.endsWith('.mbz')) {
     try {
-      var new_directory = path.join(
-        base_path,
-        file_path.split('data').pop().replace('.mbz', ''),
+      const new_directory = path.join(
+          base_path,
+          file_path.split('data').pop().replace('.mbz', ''),
       );
       if (!fs.existsSync(new_directory)) {
         fs.mkdirSync(new_directory);
@@ -37,8 +37,8 @@ function extractTar(file_path) {
 
 function fetchQuizInfo(file_path, directory) {
   const quizPath = path.join(file_path, directory, 'quiz.xml');
-  var data = fs.readFileSync(quizPath, 'utf-8');
-  var quiz_info;
+  const data = fs.readFileSync(quizPath, 'utf-8');
+  let quiz_info;
   xml2js.parseString(data, function (err, data) {
     quiz_info = {
       timeopen: data['activity']['quiz'][0]['timeopen'][0],
@@ -51,8 +51,8 @@ function fetchQuizInfo(file_path, directory) {
 
 function fetchAssignInfo(file_path, directory) {
   const assignPath = path.join(file_path, directory, 'assign.xml');
-  var data = fs.readFileSync(assignPath, 'utf-8');
-  var assign_info;
+  const data = fs.readFileSync(assignPath, 'utf-8');
+  let assign_info;
   xml2js.parseString(data, function (err, data) {
     assign_info = {
       duedate: data['activity']['assign'][0]['duedate'][0],
@@ -65,14 +65,14 @@ function fetchAssignInfo(file_path, directory) {
 }
 
 function fetchActivities(file_path) {
-  var activities = [];
+  const activities = [];
 
-  var xml_data = fs.readFileSync(
-    path.join(file_path, 'moodle_backup.xml'),
-    'utf-8',
+  const xml_data = fs.readFileSync(
+      path.join(file_path, 'moodle_backup.xml'),
+      'utf-8',
   );
   xml2js.parseString(xml_data, function (err, data) {
-    for (var obj of data['moodle_backup']['information'][0]['contents'][0][
+    for (const obj of data['moodle_backup']['information'][0]['contents'][0][
       'activities'
     ][0]['activity']) {
       switch (obj.modulename[0]) {
@@ -137,7 +137,7 @@ function updateActivities(file_path, activities) {
       '/' +
       activities[i].getModuleName() +
       '.xml';
-    var xml_data = fs.readFileSync(path);
+    const xml_data = fs.readFileSync(path);
     xml2js.parseString(xml_data, function (err, data) {
       switch (activities[i].getModuleName()) {
         case 'quiz':
@@ -176,11 +176,9 @@ function updateActivities(file_path, activities) {
 }
 
 async function repackageToMBZ(file_path) {
-  var updatedate = new Date();
-  var datestring = updatedate.getDay()+'-'+(updatedate.getMonth()+1)+'_'+updatedate.getHours()+'_'+updatedate.getMinutes()
-  var mbzPath = path.join("mbzPackages", "moodle-backup-" + datestring + ".mbz")
-  var output = fs.createWriteStream(mbzPath);
-  var archive = archiver('zip');
+  const mbzPath = path.join("mbzPackages", "moodle-backup-" + dateToMbzString(new Date()) + ".mbz");
+  const output = fs.createWriteStream(mbzPath);
+  const archive = archiver('zip');
 
   output.on('close', function () {
       // console.log(archive.pointer() + ' total bytes');
@@ -197,6 +195,10 @@ async function repackageToMBZ(file_path) {
   archive.finalize();
 
   return mbzPath
+}
+
+function dateToMbzString(date) {
+  return date.getDay() + '-' + (date.getMonth() + 1) + '_' + date.getHours() + '_' + date.getMinutes();
 }
 
 module.exports = {

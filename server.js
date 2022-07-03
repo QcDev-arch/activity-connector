@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const iCalParser = require("./utils/iCalParser");
+const iCalParser = require("./utils/parser/iCalParser");
 
 // Constants
 const PORT = 8080;

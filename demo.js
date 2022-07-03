@@ -1,4 +1,4 @@
-var MoodleQuiz = require('./app/models/moodle_quiz');
+var MoodleQuiz = require('./app/models/moodleQuiz');
 const {
   extractTar,
   fetchActivities,

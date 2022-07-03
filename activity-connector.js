@@ -3,10 +3,10 @@ const path = require("path");
 const program = require("commander");
 const fs = require("fs");
 
-const dslDateParser = require("./utils/dslDateParser");
-const DSLParser = require("./utils/dsl-parser");
-const iCalParser = require("./utils/iCalParser");
-const MoodleQuiz = require("./app/models/moodle_quiz");
+const dslDateParser = require("./utils/parser/dslDateParser");
+const DSLParser = require("./utils/parser/dslParser");
+const iCalParser = require("./utils/parser/iCalParser");
+const MoodleQuiz = require("./app/models/moodleQuiz");
 const {
   extractTar,
   fetchActivities,

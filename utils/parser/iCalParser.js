@@ -1,10 +1,9 @@
-// import ical
-const ical = require('node-ical');
+const nodeICalParser = require('node-ical');
 const {
   Seminar,
   Laboratory,
   Practicum,
-} = require('../app/models/calendarActivity');
+} = require('../../app/models/calendarActivity');
 
 const BASE_URL = 'https://portail.etsmtl.ca/ICal/SeancesCours?';
 
@@ -25,7 +24,7 @@ class iCalParser {
         `Session=${this.year + this.semesterSeason}&`,
     );
 
-    const url = await ical.async.fromURL(BASE_URL + params.toString());
+    const url = await nodeICalParser.async.fromURL(BASE_URL + params.toString());
 
     var seminars = [];
     var practicums = [];

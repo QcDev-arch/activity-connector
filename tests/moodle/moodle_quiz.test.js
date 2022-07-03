@@ -1,4 +1,4 @@
-const MoodleQuiz = require('../../app/models/moodle_quiz');
+const MoodleQuiz = require('../../app/models/moodleQuiz');
 
 test('edit moodle quiz', () => {
   var quiz = new MoodleQuiz(
@@ -12,8 +12,8 @@ test('edit moodle quiz', () => {
   );
 
   quiz.setTimeOpen('12345');
-  expect(quiz.timeopen).toBe('12345');
+  expect(quiz.timeOpen).toBe('12345');
 
   quiz.setTimeClose('54321');
-  expect(quiz.timeclose).toBe('54321');
+  expect(quiz.timeClose).toBe('54321');
 });

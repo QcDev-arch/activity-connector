@@ -109,3 +109,6 @@ mbzPackages/
 
 # Mac folder system
 **/.DS_Store
+
+# Webstorm
+.idea/
