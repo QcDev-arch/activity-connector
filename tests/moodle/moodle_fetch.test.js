@@ -46,8 +46,12 @@ describe('Moodle class instantiation test', () => {
 // Test for XML Reader
 describe('Test for XML Reader', () => {
     beforeAll(() => {
-        fs.rmSync("./tmp", { recursive: true });
-        fs.rmSync("./mbzPackages", { recursive: true});
+        if (fs.existsSync("./tmp")) {
+            fs.rmSync("./tmp", { recursive: true });
+        }
+        if (fs.existsSync("./mbzPackages")) {
+            fs.rmSync("./mbzPackages", { recursive: true});
+        }
         // Extract the moodle backup file before doing these tests
         extractTar(PATH);
     });
