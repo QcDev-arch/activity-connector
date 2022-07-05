@@ -15,6 +15,7 @@
         "archiver": "^5.3.1",
         "commander": "^9.3.0",
         "express": "^4.16.1",
+        "fs-extra": "^10.1.0",
         "moment": "^2.29.3",
         "node-ical": "^0.15.1",
         "pegjs": "^0.10.0",
@@ -24,5 +25,10 @@
     },
     "devDependencies": {
         "jest": "^28.1.0"
+    },
+    "jest": {
+        "coveragePathIgnorePatterns" : [
+            "<rootDir>/app/utils/dsl-parser" 
+        ]
     }
 }

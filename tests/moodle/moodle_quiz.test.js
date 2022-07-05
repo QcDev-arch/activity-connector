@@ -13,11 +13,11 @@ test("edit moodle quiz", () => {
   );
 
   quiz.setTimeOpen("12345");
-  expect(quiz.timeopen).toBe("12345");
+  expect(quiz.getTimeOpen()).toBe("12345");
 
   quiz.setTimeClose("54321");
-  expect(quiz.timeclose).toBe("54321");
+  expect(quiz.getTimeClose()).toBe("54321");
 
   quiz.setTimeLimit("721");
-  expect(quiz.timelimit).toBe("721");
+  expect(quiz.getTimeLimit()).toBe("721");
 });

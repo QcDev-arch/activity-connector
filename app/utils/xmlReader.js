@@ -7,6 +7,7 @@ var path = require("path");
 var tar = require("tar");
 var xml2js = require("xml2js");
 var base_path = "./tmp";
+var base_path_mbz_packages = "./mbzPackages";
 
 function extractTar(file_path) {
   // Checks if tmp directory exists
@@ -15,25 +16,22 @@ function extractTar(file_path) {
   }
   // Check if mbz file exists, then extract to tmp directory
   if (file_path.endsWith(".mbz")) {
-    try {
-      var new_directory = path.join(
-        base_path,
-        file_path.split("data").pop().replace(".mbz", ""),
-      );
-      if (!fs.existsSync(new_directory)) {
-        fs.mkdirSync(new_directory);
-      }
-      tar.x({
-        file: file_path,
-        C: new_directory,
-        sync: true,
-      });
-    } catch (error) {
-      throw error;
+    var new_directory = path.join(
+      base_path,
+      file_path.split("data").pop().replace(".mbz", ""),
+    );
+    if (!fs.existsSync(new_directory)) {
+      fs.mkdirSync(new_directory);
     }
+    tar.x({
+      file: file_path,
+      C: new_directory,
+      sync: true,
+    });
   }
 }
 
+/* istanbul ignore next */
 function fetchQuizInfo(file_path, directory) {
   const quizPath = path.join(file_path, directory, "quiz.xml");
   var data = fs.readFileSync(quizPath, "utf-8");
@@ -52,6 +50,7 @@ function fetchQuizInfo(file_path, directory) {
   return quiz_info;
 }
 
+/* istanbul ignore next */
 function fetchAssignInfo(file_path, directory) {
   const assignPath = path.join(file_path, directory, "assign.xml");
   var data = fs.readFileSync(assignPath, "utf-8");
@@ -79,12 +78,11 @@ function fetchActivities(file_path) {
     "utf-8",
   );
   xml2js.parseString(xml_data, function (err, data) {
+    /* istanbul ignore next */
     if (err) {
       throw err;
     }
-    for (var obj of data["moodle_backup"]["information"][0]["contents"][0][
-      "activities"
-    ][0]["activity"]) {
+    for (var obj of data["moodle_backup"]["information"][0]["contents"][0]["activities"][0]["activity"]) {
       switch (obj.modulename[0]) {
         case "quiz":
           quiz_info = fetchQuizInfo(file_path, obj.directory[0]);
@@ -142,6 +140,7 @@ function updateActivities(file_path, activities) {
     );
     var xml_data = fs.readFileSync(updatePath);
     xml2js.parseString(xml_data, function (err, data) {
+      /* istanbul ignore next */
       if (err) {
         throw err;
       }
@@ -155,11 +154,7 @@ function updateActivities(file_path, activities) {
           const quizBuilder = new xml2js.Builder();
           const xmlQuiz = quizBuilder.buildObject(data);
 
-          fs.writeFileSync(updatePath, xmlQuiz, err => {
-            if (err) {
-              throw err;
-            }
-          });
+          fs.writeFileSync(updatePath, xmlQuiz);
           break;
         case "assign":
           data["activity"]["assign"][0].duedate = [activities[i].getDueDate()];
@@ -173,11 +168,7 @@ function updateActivities(file_path, activities) {
           const assignBuilder = new xml2js.Builder();
           const xmlAssign = assignBuilder.buildObject(data);
 
-          fs.writeFileSync(updatePath, xmlAssign, err => {
-            if (err) {
-              throw err;
-            }
-          });
+          fs.writeFileSync(updatePath, xmlAssign);
           break;
       }
     });
@@ -185,6 +176,11 @@ function updateActivities(file_path, activities) {
 }
 
 async function repackageToMBZ(file_path) {
+  // Checks if tmp directory exists
+  if (!fs.existsSync(base_path_mbz_packages)) {
+    fs.mkdirSync(base_path_mbz_packages);
+  }
+
   var updatedate = new Date();
   var datestring =
     updatedate.getDay() +
@@ -201,10 +197,7 @@ async function repackageToMBZ(file_path) {
   var output = fs.createWriteStream(mbzPath);
   var archive = archiver("zip");
 
-  output.on("close", function () {
-    // console.log(archive.pointer() + ' total bytes');
-  });
-
+  /* istanbul ignore next */
   archive.on("error", function (err) {
     throw err;
   });
@@ -213,7 +206,7 @@ async function repackageToMBZ(file_path) {
 
   archive.directory(file_path, false);
 
-  archive.finalize();
+  await archive.finalize();
 
   return mbzPath;
 }
