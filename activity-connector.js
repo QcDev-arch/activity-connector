@@ -29,59 +29,66 @@ const getSemesterSeasonNumber = function (semesterSeason) {
   }
 };
 
+// node activity-connector.js extract-mbz -p .\data\backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz
 program
-  .command("extract")
-  .description("Extracts [.mbz file] to the tmp directory")
-  .argument("<file-path>", "the path to the .mbz file to extract")
-  .action(function (filePath) {
-    try{
+  .command("extract-mbz")
+  .description("Extracts .mbz file to the tmp directory")
+  .requiredOption(
+    "-p, --path <directory>",
+    "(required) the path to the .mbz file to extract",
+  )
+  .action(function (options) {
+    try {
       console.log("Extracting .mbz file...");
-      extractTar(filePath);
+      extractTar(options.path);
       console.log("Done!");
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
     }
   });
 
-// ./activity-connector.js print-dir data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
-// node activity-connector.js print-dir .\tmp\backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
+// node activity-connector.js print-dir --path .\tmp\backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
 program
   .command("print-dir")
-  .description("Outputs all activities from a [mbz directory]")
-  .argument("<directory-path>", "the directory to the extracted Moodle files.")
-  .action(function (directoryPath) {
-    console.log(fetchActivities(directoryPath));
+  .summary("Outputs all activities from a mbz directory")
+  .description(`Outputs all activities from a mbz directory
+Example: node activity-connector.js print-dir --path ./path/to/directory`)
+  .requiredOption(
+    "--path <directory>",
+    "(required) the directory to the extracted Moodle files.",
+  )
+  .action(function (options) {
+    console.log(fetchActivities(options.path));
   });
 
-// ./activity-connector.js print-ics log210 01 2022 Summer
-// node activity-connector.js print-ics LOG210 01 2022 Summer
+// node activity-connector.js print-ics --acronym LOG210 --group 01 --year 2022 --semester Summer
 program
   .command("print-ics")
-  .description(
-    "Outputs dates for specified [activity type] [course acronym] [group] [year] [semester #: Winter(1), Summer(2), Fall (3)]",
+  .summary("Outputs dates for a course")
+  .description(`
+  `)
+  .requiredOption(
+    "-a, --acronym <course>",
+    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .argument(
-    "<course-acronym>",
-    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+  .requiredOption(
+    "-g, --group <number>",
+    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .argument(
-    "<group>",
-    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
-  )
-  .argument("<year>", "the year of the course")
-  .argument(
-    "<semesterSeason>",
-    "the semester season. The options are Winter, Summer or Fall",
+  .requiredOption("-y --year <number>", "(required) the year of the course")
+  .requiredOption(
+    "-s --semester <season>",
+    "(required) the semester's season. The options are Winter, Summer or Fall",
   )
   .option("-t, --typeact", "the activity type (such as C, Labo or TP)", "")
-  .action(function (courseAcronym, group, year, semesterSeason, options) {
+  .action(function (options) {
     try {
       let icsParser = new iCalParser(
         options.typeact,
-        courseAcronym,
-        group,
-        year,
-        getSemesterSeasonNumber(semesterSeason),
+        options.acronym,
+        options.group,
+        options.year,
+        getSemesterSeasonNumber(options.semester),
       );
       icsParser.parse().then(ics => console.log(ics));
     } catch (err) {
@@ -89,44 +96,40 @@ program
     }
   });
 
-// ./activity-connector.js parse-dsl ./data/test.dsl LOG210 01 2022 Summer
-// node activity-connector.js parse-dsl ./data/test.dsl LOG210 01 2022 Summer
+// node activity-connector.js parse-dsl -dp ./data/test.dsl -a LOG210 -g 01 -y 2022 -s Summer
 program
   .command("parse-dsl")
+  .summary("Parses a dsl file and outputs new dates based on a course")
   .description(
-    "Parses [.dsl file] for specified [activity type] [course symbol] [group] [year] [semester #: Winter(1), Summer(2), Fall (3)]",
+    `Parses a dsl file and outputs new dates based on a course's informations.
+Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer`)
+  .requiredOption(
+    "-dp, --dslpath <directory>",
+    "(required) the path to the DSL file",
   )
-  .argument("<dsl-file-path>", "The path to the DSL file")
-  .argument(
-    "<course-acronym>",
-    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+  .requiredOption(
+    "-a, --acronym <course>",
+    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .argument(
-    "<group>",
-    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
+  .requiredOption(
+    "-g, --group <number>",
+    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .argument("<year>", "the year of the course")
-  .argument(
-    "<semesterSeason>",
-    "the semester season (options are Winter, Summer or Fall)",
+  .requiredOption("-y --year <number>", "(required) the year of the course")
+  .requiredOption(
+    "-s --semester <season>",
+    "(required) the semester's season. The options are Winter, Summer or Fall",
   )
   .option("-t, --typeact", "the activity type (such as C, Labo or TP)", "")
-  .action(async function (
-    dslFilePath,
-    courseAcronym,
-    group,
-    year,
-    semesterSeason,
-    options,
-  ) {
+  .action(async function (options) {
     try {
-      let string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
+      let string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
       let ical = new iCalParser(
         options.typeact,
-        courseAcronym,
-        group,
-        year,
-        getSemesterSeasonNumber(semesterSeason),
+        options.acronym,
+        options.group,
+        options.year,
+        getSemesterSeasonNumber(options.semester),
       );
       ical.parse().then(ics => {
         console.log(
@@ -134,71 +137,69 @@ program
         );
       });
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
     }
   });
 
-// ./activity-connector.js update data/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu.mbz data/test.dsl LOG210 01 2022 Summer
-// node activity-connector.js update .\data\backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz .\data\test.dsl LOG210 01 2022 Summer
+// node activity-connector.js create -mp .\data\backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz -dp .\data\test.dsl -a LOG210 -g 01 -y 2022 -s Summer
 program
-  .command("update")
+  .command("create")
+  .summary("create a new updated mbz file")
   .description(
-    "Extracts, updates values and repackages [.mbz file] using [.dsl file] [activity type] [course symbol] [group] [year] [semester #: Winter(1), Summer(2), Fall (3)]",
+    `Create a new updated mbz file using the mbz backup from
+Moodle, the dsl file and informations about the course.
+
+Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer`,
   )
-  .argument("<mbz-file-path>", "the path of the mbz file")
-  .argument("<dsl-file-path>", "the path of the dsl file")
-  .argument(
-    "<course-acronym>",
-    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+  .requiredOption("-mp --mbzpath <directory>", "(required) the path of the mbz file")
+  .requiredOption(
+    "-dp, --dslpath <directory>",
+    "(required) the path to the DSL file",
   )
-  .argument(
-    "<group>",
-    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
+  .requiredOption(
+    "-a, --acronym <course>",
+    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .argument("<year>", "the year of the course")
-  .argument(
-    "<semesterSeason>",
-    "the semester season (options are Winter, Summer or Fall)",
+  .requiredOption(
+    "-g, --group <number>",
+    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .action(async function (
-    mbzFilePath,
-    dslFilePath,
-    courseAcronym,
-    group,
-    year,
-    semesterSeason,
-  ) {
-    try{
-      let semesterSeasonNumber = getSemesterSeasonNumber(semesterSeason)
+  .requiredOption("-y --year <number>", "(required) the year of the course")
+  .requiredOption(
+    "-s --semester <season>",
+    "(required) the semester's season. The options are Winter, Summer or Fall",
+  )
+  .action(async function (options) {
+    try {
       console.log("Fetching DSL...");
-      var string = fs.readFileSync(dslFilePath, { encoding: "utf8" });
-  
+      var string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
+
       console.log("Fetching .ics calendar...");
       var ical = new iCalParser(
         "",
-        courseAcronym,
-        group,
-        year,
-        semesterSeasonNumber,
+        options.acronym,
+        options.group,
+        options.year,
+        getSemesterSeasonNumber(options.semester),
       );
       var calendarActivities = await ical.parse();
-  
+
       console.log("Parse DSL and getting new dates...");
       var newTimes = dslDateParser.getListModifiedTimes(
         calendarActivities,
         DSLParser.parse(string)[1],
       );
-  
+
       var newPath = path.join(
         "tmp",
-        mbzFilePath.split("\\").pop().split("/").pop().split(".mbz")[0],
+        options.mbzpath.split("\\").pop().split("/").pop().split(".mbz")[0],
         "/",
       );
-  
+
       console.log("Extracting .mbz file...");
-      extractTar(mbzFilePath);
+      extractTar(options.mbzpath);
       var activities = fetchActivities(newPath);
-  
+
       // TODO Refactor into another file
       // TODO only modifies quiz so far, have to cover the other classes
       console.log("Modifying Moodle Activities...");
@@ -224,8 +225,10 @@ program
             if (activity instanceof MoodleAssignment) {
               if (i == index) {
                 activity.setDueDate(`${obj.due.getTime() / 1000}`);
-                activity.setAllowSubmissionsFromDate(`${obj.open.getTime() / 1000}`);
-                activity.setCutoffDate(`${obj.cutoff.getTime() / 1000}`)
+                activity.setAllowSubmissionsFromDate(
+                  `${obj.open.getTime() / 1000}`,
+                );
+                activity.setCutoffDate(`${obj.cutoff.getTime() / 1000}`);
                 break;
               }
               i++;
@@ -236,10 +239,18 @@ program
           var index = Number.parseInt(obj.activity.split(" ")[1]) - 1;
           let i = 0;
           for (var activity of activities) {
-            if (activity instanceof MoodleQuiz && activity.title.toLowerCase().includes("exam")) {
+            if (
+              activity instanceof MoodleQuiz &&
+              activity.title.toLowerCase().includes("exam")
+            ) {
               if (i == index) {
                 activity.setTimeOpen(`${obj.open.getTime() / 1000}`);
-                activity.setTimeClose(`${(obj.open.getTime() / 1000) + Number.parseInt(activity.getTimeLimit())}`)
+                activity.setTimeClose(
+                  `${
+                    obj.open.getTime() / 1000 +
+                    Number.parseInt(activity.getTimeLimit())
+                  }`,
+                );
                 break;
               }
               i++;
@@ -248,13 +259,13 @@ program
         }
       }
       updateActivities(newPath, activities);
-  
+
       console.log("Repackaging...");
       let mbzPath = await repackageToMBZ(newPath);
-  
+
       console.log("Done! The new .mbz file is in the following path:", mbzPath);
     } catch (err) {
-      console.error(err.message)
+      console.error(err.message);
     }
   });
 
