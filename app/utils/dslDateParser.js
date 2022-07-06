@@ -21,6 +21,7 @@ const getListModifiedTimes = function (calendarActivities, pegObj) {
 };
 
 // Parses the peg obj and returns the modified dates for a quiz
+/* istanbul ignore next */
 const getNewQuizDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -58,6 +59,7 @@ const getNewQuizDates = function (obj, calendarActivities) {
 };
 
 // Parses the peg obj and returns the modified dates for an exam
+/* istanbul ignore next */
 const getNewExamDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -80,6 +82,7 @@ const getNewExamDates = function (obj, calendarActivities) {
 };
 
 // Parses the peg obj and returns the modified dates for a homework
+/* istanbul ignore next */
 const getNewHomeworkDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -132,6 +135,7 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
 };
 
 // Get calendar activity based on the DSL activity name and its number.
+/* istanbul ignore next */
 const getCalendarActivity = function (
   calendarActivities,
   activityName,
@@ -163,6 +167,7 @@ const getCalendarActivity = function (
 };
 
 // Returns a modified time based on the peg object modifier and time object (if present)
+/* istanbul ignore next */
 const modifyTime = function (calendarAct, modifier, timeObj) {
   var newDate;
   switch (modifier) {

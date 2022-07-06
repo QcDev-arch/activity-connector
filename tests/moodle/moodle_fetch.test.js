@@ -2,10 +2,12 @@
 const MoodleActivity = require('../../app/models/moodle_activity');
 const MoodleAssignement = require('../../app/models/moodle_assignment');
 const MoodleQuiz = require('../../app/models/moodle_quiz');
-const { extractTar, fetchActivities, fetchQuizInfo, updateActivities, repackageToMBZ } = require("../../app/utils/xmlReader")
+const { extractTar, fetchActivities, updateActivities, repackageToMBZ } = require("../../app/utils/xmlReader")
 const fs = require('fs-extra')
 const PATH = "data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz"
 const NEW_PATH = "tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu/"
+const TMP_PATH = "./tmp";
+const MBZ_PATH = "./mbzPackages";
 
 /*-------MOODLE TESTS--------*/
 describe('Moodle class instantiation test', () => {
@@ -46,14 +48,18 @@ describe('Moodle class instantiation test', () => {
 // Test for XML Reader
 describe('Test for XML Reader', () => {
     beforeAll(() => {
-        if (fs.existsSync("./tmp")) {
-            fs.rmSync("./tmp", { recursive: true });
-        }
-        if (fs.existsSync("./mbzPackages")) {
-            fs.rmSync("./mbzPackages", { recursive: true});
-        }
         // Extract the moodle backup file before doing these tests
         extractTar(PATH);
+    });
+
+    afterAll(() => {
+        // delete the tmp folder and mbzPackages folder
+        if (fs.existsSync(TMP_PATH)) {
+            fs.rmSync(TMP_PATH, { recursive: true, force: true });
+        }
+        if (fs.existsSync(MBZ_PATH)) {
+            fs.rmSync(MBZ_PATH, { recursive: true, force: true });
+        }
     });
 
     test('Modification of a quiz', () => {
@@ -72,8 +78,6 @@ describe('Test for XML Reader', () => {
         return repackageToMBZ(NEW_PATH).then((mbzPath) => {
             // Promise added to the repackageToMBZ function for the test to wait for the file to exist.
             expect(fs.existsSync(mbzPath)).toBeTruthy();
-            // Delete the test file created to prevent having a lot of backup from tests.
-            fs.unlinkSync(mbzPath);
         });
     });
 })
