@@ -12,7 +12,7 @@ const MBZ_PATH = "./mbzPackages";
 /*-------MOODLE TESTS--------*/
 describe('Moodle class instantiation test', () => {
     test('Instantiate a MoodleActivity object', () => {
-        var activity = new MoodleActivity("test", "1", "1", "test_module", "file_path")
+        const activity = new MoodleActivity("test", "1", "1", "test_module", "file_path");
         expect(activity.title).toBe("test")
         expect(activity.moduleid).toBe("1")
         expect(activity.getModuleId()).toBe("1")
@@ -22,26 +22,26 @@ describe('Moodle class instantiation test', () => {
         expect(activity.directory).toBe("file_path")
     })
 
-    test('Instantiate a MoodleAssignement object', () => {
-        var assignement = new MoodleAssignement("test", "1", "1", "test_module", "file_path", "08/06/2022",true)
-        expect(assignement.title).toBe("test")
-        expect(assignement.moduleid).toBe("1")
-        expect(assignement.sectionid).toBe("1")
-        expect(assignement.modulename).toBe("test_module")
-        expect(assignement.directory).toBe("file_path")
-        expect(assignement.duedate).toBe("08/06/2022")
-        expect(assignement.allowsubmissionsfromdate).toBeTruthy()
+    test('Instantiate a MoodleAssignment object', () => {
+        const assignment = new MoodleAssignment("test", "1", "1", "test_module", "file_path", "08/06/2022", true);
+        expect(assignment.title).toBe("test")
+        expect(assignment.moduleId).toBe("1")
+        expect(assignment.sectionid).toBe("1")
+        expect(assignment.moduleName).toBe("test_module")
+        expect(assignment.directory).toBe("file_path")
+        expect(assignment.dueDate).toBe("08/06/2022")
+        expect(assignment.allowSubmissionsFromDate).toBeTruthy()
     })
 
     test('Instantiate a MoodleQuiz object', () => {
-        var quiz = new MoodleQuiz("test", "1", "1", "test_module", "file_path", "10:00", "15:00")
+        const quiz = new MoodleQuiz("test", "1", "1", "test_module", "file_path", "10:00", "15:00");
         expect(quiz.title).toBe("test")
-        expect(quiz.moduleid).toBe("1")
+        expect(quiz.moduleId).toBe("1")
         expect(quiz.sectionid).toBe("1")
-        expect(quiz.modulename).toBe("test_module")
+        expect(quiz.moduleName).toBe("test_module")
         expect(quiz.directory).toBe("file_path")
-        expect(quiz.timeopen).toBe("10:00")
-        expect(quiz.timeclose).toBe("15:00")
+        expect(quiz.timeOpen).toBe("10:00")
+        expect(quiz.timeClose).toBe("15:00")
     })
 })
 
@@ -64,7 +64,7 @@ describe('Test for XML Reader', () => {
 
     test('Modification of a quiz', () => {
         // Fetched from the demo.js file for modifications
-        var time = "8888888888";
+        const time = "8888888888";
         let activities = fetchActivities(NEW_PATH);
         activities[1].setTimeOpen(time);
         

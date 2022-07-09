@@ -1,4 +1,4 @@
-const DslParser = require('../../app/utils/dsl-parser');
+const DslParser = require('../../utils/parser/dslParser');
 
 /*-------DSL TESTS--------*/
 

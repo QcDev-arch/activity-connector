@@ -3,26 +3,27 @@ const path = require("path");
 const program = require("commander");
 const fs = require("fs");
 
-const dslDateParser = require("./app/utils/dslDateParser");
-const DSLParser = require("./app/utils/dsl-parser");
-const iCalParser = require("./app/utils/iCalParser");
-const MoodleQuiz = require("./app/models/moodle_quiz");
+const dslDateParser = require("./utils/parser/dslDateParser");
+const DSLParser = require("./utils/parser/dslParser");
+const iCalParser = require("./utils/parser/iCalParser");
+const MoodleQuiz = require("./app/models/moodleQuiz");
 const {
   extractTar,
   fetchActivities,
   updateActivities,
   repackageToMBZ,
-} = require("./app/utils/xmlReader");
+} = require("./utils/xmlReader");
+const {TRIMESTERS} = require("./utils/constants");
 const MoodleAssignment = require("./app/models/moodle_assignment");
 const { InvalidSemesterSeason } = require("./app/exceptions");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
   switch (semesterSeason) {
-    case "Winter":
+    case TRIMESTERS.WINTER:
       return 1;
-    case "Summer":
+    case TRIMESTERS.SUMMER:
       return 2;
-    case "Fall":
+    case TRIMESTERS.FALL:
       return 3;
     default:
       throw new InvalidSemesterSeason(semesterSeason);

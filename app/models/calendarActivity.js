@@ -10,21 +10,18 @@ class CalendarActivity {
 class Seminar extends CalendarActivity {
   constructor(event) {
     super(event);
-    // console.log(event.description);
   }
 }
 
 class Laboratory extends CalendarActivity {
   constructor(event) {
     super(event);
-    // console.log(event.description);
   }
 }
 
 class Practicum extends CalendarActivity {
   constructor(event) {
     super(event);
-    // console.log(event.description);
   }
 }
 

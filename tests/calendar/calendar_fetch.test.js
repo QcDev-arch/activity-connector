@@ -1,5 +1,5 @@
 /* Calendar requirements */
-const iCalParser = require('../../app/utils/iCalParser');
+const iCalParser = require('../../utils/parser/iCalParser');
 
 const {CalendarActivity,Seminar,Laboratory,Practicum} = require('../../app/models/calendarActivity');
 

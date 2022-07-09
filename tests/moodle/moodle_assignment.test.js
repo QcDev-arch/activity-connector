@@ -1,4 +1,4 @@
-const MoodleAssignment = require("../../app/models/moodle_assignment");
+const MoodleAssignment = require('../../app/models/moodleAssignment');
 
 test("edit moodle assignment", () => {
   var assignment = new MoodleAssignment(

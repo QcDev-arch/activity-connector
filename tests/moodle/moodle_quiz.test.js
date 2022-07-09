@@ -1,4 +1,4 @@
-const MoodleQuiz = require("../../app/models/moodle_quiz");
+const MoodleQuiz = require('../../app/models/moodleQuiz');
 
 test("edit moodle quiz", () => {
   var quiz = new MoodleQuiz(
