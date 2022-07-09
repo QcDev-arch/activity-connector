@@ -1,7 +1,7 @@
 /* Requires for Moodle tests */
-const MoodleActivity = require("../../app/models/MoodleActivity");
+const MoodleActivity = require("../../app/models/moodleActivity");
 const MoodleAssignment = require("../../app/models/moodleAssignment");
-const MoodleQuiz = require("../../app/models/MoodleQuiz");
+const MoodleQuiz = require("../../app/models/moodleQuiz");
 const {
   extractTar,
   fetchActivities,
