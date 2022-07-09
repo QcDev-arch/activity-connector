@@ -3,34 +3,34 @@ const path = require("path");
 const program = require("commander");
 const fs = require("fs");
 
-const dslDateParser = require("./utils/parser/dslDateParser");
-const DSLParser = require("./utils/parser/dslParser");
-const iCalParser = require("./utils/parser/iCalParser");
+const dslDateParser = require("./app/utils/dslDateParser");
+const DSLParser = require("./app/utils/dslParser");
+const iCalParser = require("./app/utils/iCalParser");
 const MoodleQuiz = require("./app/models/moodleQuiz");
 const {
   extractTar,
   fetchActivities,
   updateActivities,
   repackageToMBZ,
-} = require("./utils/xmlReader");
-const {TRIMESTERS} = require("./utils/constants");
-const MoodleAssignment = require("./app/models/moodle_assignment");
+} = require("./app/utils/xmlReader");
+const {SEMESTERS} = require("./app/utils/constants");
+const MoodleAssignment = require("./app/models/MoodleAssignment");
 const { InvalidSemesterSeason } = require("./app/exceptions");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
   switch (semesterSeason) {
-    case TRIMESTERS.WINTER:
+    case SEMESTERS.WINTER:
       return 1;
-    case TRIMESTERS.SUMMER:
+    case SEMESTERS.SUMMER:
       return 2;
-    case TRIMESTERS.FALL:
+    case SEMESTERS.FALL:
       return 3;
     default:
       throw new InvalidSemesterSeason(semesterSeason);
   }
 };
 
-// node activity-connector.js extract-mbz -p .\data\backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz
+// node activity-connector.js extract-mbz -p ./data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz
 program
   .command("extract-mbz")
   .description("Extracts .mbz file to the tmp directory")
@@ -48,7 +48,7 @@ program
     }
   });
 
-// node activity-connector.js print-dir --path .\tmp\backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
+// node activity-connector.js print-dir --path ./tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu
 program
   .command("print-dir")
   .summary("Outputs all activities from a mbz directory")
@@ -142,7 +142,7 @@ Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -
     }
   });
 
-// node activity-connector.js create -mp .\data\backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz -dp .\data\test.dsl -a LOG210 -g 01 -y 2022 -s Summer
+// node activity-connector.js create -mp ./data/backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz -dp ./data/test.dsl -a LOG210 -g 01 -y 2022 -s Summer
 program
   .command("create")
   .summary("create a new updated mbz file")

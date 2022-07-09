@@ -1,4 +1,4 @@
-const MoodleActivity = require('./moodleActivity');
+const MoodleActivity = require("./moodleActivity");
 
 class MoodleAssignment extends MoodleActivity {
   constructor(
@@ -9,10 +9,12 @@ class MoodleAssignment extends MoodleActivity {
     directory,
     dueDate,
     allowSubmissionsFromDate,
+    cutOffDate,
   ) {
     super(title, moduleId, sectionId, moduleName, directory);
     this.dueDate = dueDate;
     this.allowSubmissionsFromDate = allowSubmissionsFromDate;
+    this.cutOffDate = cutOffDate;
   }
   getDueDate() {
     return this.dueDate;
@@ -25,6 +27,14 @@ class MoodleAssignment extends MoodleActivity {
   }
   getAllowSubmissionsFromDate() {
     return this.allowSubmissionsFromDate;
+  }
+
+  getCutoffDate() {
+    return this.cutOffDate;
+  }
+
+  setCutoffDate(cutOffDate) {
+    this.cutOffDate = cutOffDate;
   }
 }
 

@@ -9,22 +9,23 @@ class CalendarActivityNotFound extends Error {
 
 class InvalidSemesterSeason extends Error {
   constructor(semesterSeason) {
-    super(
-      `The provided semester season '${semesterSeason}' is incorrect.`
-    )
-    this.name = "InvalidSemesterSeason"
+    super(`The provided semester season '${semesterSeason}' is incorrect.`);
+    this.name = "InvalidSemesterSeason";
   }
 }
 
-class ICSCalendarActivityInvalid extends Error{
-  constructor(event){
-    super("Not a valid calendar activity. The following payload is not mapped yet: ", event)
-    this.name = "ICSCalendarActivityInvalid"
+class ICSCalendarActivityInvalid extends Error {
+  constructor(event) {
+    super(
+      "Not a valid calendar activity. The following payload is not mapped yet: " +
+        event,
+    );
+    this.name = "ICSCalendarActivityInvalid";
   }
 }
 
 module.exports = {
   CalendarActivityNotFound: CalendarActivityNotFound,
   InvalidSemesterSeason: InvalidSemesterSeason,
-  ICSCalendarActivityInvalid: ICSCalendarActivityInvalid
+  ICSCalendarActivityInvalid: ICSCalendarActivityInvalid,
 };

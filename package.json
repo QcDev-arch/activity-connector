@@ -28,7 +28,8 @@
     },
     "jest": {
         "coveragePathIgnorePatterns" : [
-            "<rootDir>/app/utils/dsl-parser" 
+            "<rootDir>/app/utils/dslParser",
+            "<rootDir>/app/utils/constants"
         ]
     }
 }

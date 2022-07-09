@@ -1,633 +1,615 @@
-const DslParser = require('../../utils/parser/dslParser');
+const DslParser = require("../../app/utils/dslParser");
 
 /*-------DSL TESTS--------*/
 
-describe('Test for dsl parser error', () => {
-  test('Error time with exam', () => {
+describe("Test for dsl parser error", () => {
+  test("Error time with exam", () => {
     expect(() => {
-      DslParser.parse(
-        'E1 S2-15m',
-      );
+      DslParser.parse("E1 S2-15m");
     }).toThrow();
   });
 
-  test('Error invalid character in front', () => {
+  test("Error invalid character in front", () => {
     expect(() => {
-      DslParser.parse(
-        '_E1 S2',
-      );
+      DslParser.parse("_E1 S2");
     }).toThrow();
   });
 
-  test('Error no S or F with a quiz', () => {
+  test("Error no S or F with a quiz", () => {
     expect(() => {
-      DslParser.parse(
-        'Q1 S1',
-      );
+      DslParser.parse("Q1 S1");
     }).toThrow();
   });
 
-  test('Error no invalid character on other lines', () => {
+  test("Error no invalid character on other lines", () => {
     expect(() => {
-      DslParser.parse(
-        'Q1 L1F\nq1 S2',
-      );
+      DslParser.parse("Q1 L1F\nq1 S2");
     }).toThrow();
   });
 
-  test('Error no S or F with a homework', () => {
+  test("Error no S or F with a homework", () => {
     expect(() => {
-      DslParser.parse(
-        'H1 L1',
-      );
-      }).toThrow();
-  });
-
-  test('Error invalid time modifier', () => {
-    expect(() => {
-      DslParser.parse(
-        'H1 L1S-5m@5:5',
-      );
+      DslParser.parse("H1 L1");
     }).toThrow();
   });
 
-  test('Error invalid time modifier with comment', () => {
+  test("Error invalid time modifier", () => {
     expect(() => {
-      DslParser.parse(
-        '#test\nH1 S1F-1h@05',
-      );
+      DslParser.parse("H1 L1S-5m@5:5");
     }).toThrow();
   });
 
-  test('Error integer', () => {
+  test("Error invalid time modifier with comment", () => {
     expect(() => {
-      DslParser.parse(
-        'Hf',
-      );
+      DslParser.parse("#test\nH1 S1F-1h@05");
     }).toThrow();
   });
 
-  test('Error invalid time modifier', () => {
+  test("Error integer", () => {
     expect(() => {
-      DslParser.parse(
-        'H1 S1F-1w@',
-      );
+      DslParser.parse("Hf");
+    }).toThrow();
+  });
+
+  test("Error invalid time modifier", () => {
+    expect(() => {
+      DslParser.parse("H1 S1F-1w@");
     }).toThrow();
   });
 });
 
-test('Test parser basic', () => {
+test("Test parser basic", () => {
   expect(
     DslParser.parse(
-      'E1 S2\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m',
+      "E1 S2\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m",
     ),
   ).toStrictEqual([
     [],
     [
       {
-        activity: 'Exam 1',
+        activity: "Exam 1",
         open: {
-          activity: 'Seminar 2',
+          activity: "Seminar 2",
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
     ],
-    'EOF',
+    "EOF",
   ]);
 });
 
-test('Test parser with a lot of stuff', () => {
+test("Test parser with a lot of stuff", () => {
   expect(
     DslParser.parse(
-      'E1 S2\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S+1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15w\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nE2 S13',
+      "E1 S2\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S+1d@23:55\nQ1 S1F+1h P2S-15m\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15w\nQ1 S1F S2S-30m\nH1 L2F L3S-1d@23:55 L3S-1d@23:55\nQ1 S1F+1h P2S-15m\nE2 S13",
     ),
   ).toStrictEqual([
     [],
     [
       {
-        activity: 'Exam 1',
+        activity: "Exam 1",
         open: {
-          activity: 'Seminar 2',
+          activity: "Seminar 2",
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'w',
+            type: "w",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
         },
         close: {
-          activity: 'Seminar 2',
-          modifier: 'start',
+          activity: "Seminar 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 30,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Moodle Homework 1',
+        activity: "Moodle Homework 1",
         open: {
-          activity: 'Laboratory 2',
-          modifier: 'end',
+          activity: "Laboratory 2",
+          modifier: "end",
         },
         due: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
         cutoff: {
-          activity: 'Laboratory 3',
-          modifier: 'start',
+          activity: "Laboratory 3",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 1,
-            type: 'd',
-            at: '23:55',
+            type: "d",
+            at: "23:55",
           },
         },
       },
       {
-        activity: 'Moodle Quiz 1',
+        activity: "Moodle Quiz 1",
         open: {
-          activity: 'Seminar 1',
-          modifier: 'end',
+          activity: "Seminar 1",
+          modifier: "end",
           time: {
-            modifier: '+',
+            modifier: "+",
             number: 1,
-            type: 'h',
+            type: "h",
           },
         },
         close: {
-          activity: 'Practicum 2',
-          modifier: 'start',
+          activity: "Practicum 2",
+          modifier: "start",
           time: {
-            modifier: '-',
+            modifier: "-",
             number: 15,
-            type: 'm',
+            type: "m",
           },
         },
       },
       {
-        activity: 'Exam 2',
+        activity: "Exam 2",
         open: {
-          activity: 'Seminar 13',
+          activity: "Seminar 13",
         },
       },
     ],
-    'EOF',
+    "EOF",
   ]);
 });

@@ -4,7 +4,7 @@
  * http://pegjs.org/
  */
 
-'use strict';
+"use strict";
 
 function peg$subclass(child, parent) {
   function ctor() {
@@ -19,9 +19,9 @@ function peg$SyntaxError(message, expected, found, location) {
   this.expected = expected;
   this.found = found;
   this.location = location;
-  this.name = 'SyntaxError';
+  this.name = "SyntaxError";
 
-  if (typeof Error.captureStackTrace === 'function') {
+  if (typeof Error.captureStackTrace === "function") {
     Error.captureStackTrace(this, peg$SyntaxError);
   }
 }
@@ -29,33 +29,33 @@ function peg$SyntaxError(message, expected, found, location) {
 peg$subclass(peg$SyntaxError, Error);
 
 peg$SyntaxError.buildMessage = function (expected, found) {
-  var DESCRIBE_EXPECTATION_FNS = {
+  const DESCRIBE_EXPECTATION_FNS = {
     literal: function (expectation) {
       return '"' + literalEscape(expectation.text) + '"';
     },
 
     class: function (expectation) {
-      var escapedParts = '',
+      let escapedParts = "",
         i;
 
       for (i = 0; i < expectation.parts.length; i++) {
         escapedParts +=
           expectation.parts[i] instanceof Array
             ? classEscape(expectation.parts[i][0]) +
-              '-' +
+              "-" +
               classEscape(expectation.parts[i][1])
             : classEscape(expectation.parts[i]);
       }
 
-      return '[' + (expectation.inverted ? '^' : '') + escapedParts + ']';
+      return "[" + (expectation.inverted ? "^" : "") + escapedParts + "]";
     },
 
     any: function (expectation) {
-      return 'any character';
+      return "any character";
     },
 
     end: function (expectation) {
-      return 'end of input';
+      return "end of input";
     },
 
     other: function (expectation) {
@@ -69,35 +69,35 @@ peg$SyntaxError.buildMessage = function (expected, found) {
 
   function literalEscape(s) {
     return s
-      .replace(/\\/g, '\\\\')
+      .replace(/\\/g, "\\\\")
       .replace(/"/g, '\\"')
-      .replace(/\0/g, '\\0')
-      .replace(/\t/g, '\\t')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
+      .replace(/\0/g, "\\0")
+      .replace(/\t/g, "\\t")
+      .replace(/\n/g, "\\n")
+      .replace(/\r/g, "\\r")
       .replace(/[\x00-\x0F]/g, function (ch) {
-        return '\\x0' + hex(ch);
+        return "\\x0" + hex(ch);
       })
       .replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
-        return '\\x' + hex(ch);
+        return "\\x" + hex(ch);
       });
   }
 
   function classEscape(s) {
     return s
-      .replace(/\\/g, '\\\\')
-      .replace(/\]/g, '\\]')
-      .replace(/\^/g, '\\^')
-      .replace(/-/g, '\\-')
-      .replace(/\0/g, '\\0')
-      .replace(/\t/g, '\\t')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
+      .replace(/\\/g, "\\\\")
+      .replace(/\]/g, "\\]")
+      .replace(/\^/g, "\\^")
+      .replace(/-/g, "\\-")
+      .replace(/\0/g, "\\0")
+      .replace(/\t/g, "\\t")
+      .replace(/\n/g, "\\n")
+      .replace(/\r/g, "\\r")
       .replace(/[\x00-\x0F]/g, function (ch) {
-        return '\\x0' + hex(ch);
+        return "\\x0" + hex(ch);
       })
       .replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
-        return '\\x' + hex(ch);
+        return "\\x" + hex(ch);
       });
   }
 
@@ -131,27 +131,27 @@ peg$SyntaxError.buildMessage = function (expected, found) {
         return descriptions[0];
 
       case 2:
-        return descriptions[0] + ' or ' + descriptions[1];
+        return descriptions[0] + " or " + descriptions[1];
 
       default:
         return (
-          descriptions.slice(0, -1).join(', ') +
-          ', or ' +
+          descriptions.slice(0, -1).join(", ") +
+          ", or " +
           descriptions[descriptions.length - 1]
         );
     }
   }
 
   function describeFound(found) {
-    return found ? '"' + literalEscape(found) + '"' : 'end of input';
+    return found ? '"' + literalEscape(found) + '"' : "end of input";
   }
 
   return (
-    'Expected ' +
+    "Expected " +
     describeExpected(expected) +
-    ' but ' +
+    " but " +
     describeFound(found) +
-    ' found.'
+    " found."
   );
 };
 
@@ -185,12 +185,12 @@ function peg$parse(input, options) {
     peg$c3 = function (head, tail) {
       return head + tail;
     },
-    peg$c4 = peg$otherExpectation('Moodle Quiz Open Time'),
-    peg$c5 = peg$otherExpectation('Moodle Quiz Close Time'),
-    peg$c6 = peg$otherExpectation('Moodle Homework Allow Submissions Time'),
-    peg$c7 = peg$otherExpectation('Moodle Homework Due Time'),
-    peg$c8 = peg$otherExpectation('Moodle Homework Cutoff Time'),
-    peg$c9 = peg$otherExpectation('Activity Number (e.g., E1 for Exam 1)'),
+    peg$c4 = peg$otherExpectation("Moodle Quiz Open Time"),
+    peg$c5 = peg$otherExpectation("Moodle Quiz Close Time"),
+    peg$c6 = peg$otherExpectation("Moodle Homework Allow Submissions Time"),
+    peg$c7 = peg$otherExpectation("Moodle Homework Due Time"),
+    peg$c8 = peg$otherExpectation("Moodle Homework Cutoff Time"),
+    peg$c9 = peg$otherExpectation("Activity Number (e.g., E1 for Exam 1)"),
     peg$c10 = function (head, tail) {
       return head + tail;
     },
@@ -228,102 +228,102 @@ function peg$parse(input, options) {
     peg$c12 = function (code) {
       return code;
     },
-    peg$c13 = peg$otherExpectation('Meeting Number (e.g., S2 for Seminar 2)'),
+    peg$c13 = peg$otherExpectation("Meeting Number (e.g., S2 for Seminar 2)"),
     peg$c14 = function (meeting, number) {
-      return meeting + ' ' + number;
+      return meeting + " " + number;
     },
-    peg$c15 = '-',
-    peg$c16 = peg$literalExpectation('-', false),
-    peg$c17 = '+',
-    peg$c18 = peg$literalExpectation('+', false),
-    peg$c19 = '@',
-    peg$c20 = peg$literalExpectation('@', false),
-    peg$c21 = 'm',
-    peg$c22 = peg$literalExpectation('m', false),
-    peg$c23 = 'h',
-    peg$c24 = peg$literalExpectation('h', false),
-    peg$c25 = 'd',
-    peg$c26 = peg$literalExpectation('d', false),
-    peg$c27 = 'w',
-    peg$c28 = peg$literalExpectation('w', false),
+    peg$c15 = "-",
+    peg$c16 = peg$literalExpectation("-", false),
+    peg$c17 = "+",
+    peg$c18 = peg$literalExpectation("+", false),
+    peg$c19 = "@",
+    peg$c20 = peg$literalExpectation("@", false),
+    peg$c21 = "m",
+    peg$c22 = peg$literalExpectation("m", false),
+    peg$c23 = "h",
+    peg$c24 = peg$literalExpectation("h", false),
+    peg$c25 = "d",
+    peg$c26 = peg$literalExpectation("d", false),
+    peg$c27 = "w",
+    peg$c28 = peg$literalExpectation("w", false),
     peg$c29 = /^[2]/,
-    peg$c30 = peg$classExpectation(['2'], false, false),
+    peg$c30 = peg$classExpectation(["2"], false, false),
     peg$c31 = /^[0-3]/,
-    peg$c32 = peg$classExpectation([['0', '3']], false, false),
+    peg$c32 = peg$classExpectation([["0", "3"]], false, false),
     peg$c33 = /^[0-1]/,
-    peg$c34 = peg$classExpectation([['0', '1']], false, false),
+    peg$c34 = peg$classExpectation([["0", "1"]], false, false),
     peg$c35 = /^[0-9]/,
-    peg$c36 = peg$classExpectation([['0', '9']], false, false),
-    peg$c37 = ':',
-    peg$c38 = peg$literalExpectation(':', false),
+    peg$c36 = peg$classExpectation([["0", "9"]], false, false),
+    peg$c37 = ":",
+    peg$c38 = peg$literalExpectation(":", false),
     peg$c39 = /^[0-5]/,
-    peg$c40 = peg$classExpectation([['0', '5']], false, false),
+    peg$c40 = peg$classExpectation([["0", "5"]], false, false),
     peg$c41 = function () {
       return text();
     },
-    peg$c42 = peg$otherExpectation('integer'),
+    peg$c42 = peg$otherExpectation("integer"),
     peg$c43 = function () {
       return parseInt(text(), 10);
     },
-    peg$c44 = peg$otherExpectation('whitespace'),
+    peg$c44 = peg$otherExpectation("whitespace"),
     peg$c45 = /^[ \t]/,
-    peg$c46 = peg$classExpectation([' ', '\t'], false, false),
-    peg$c47 = 'E',
-    peg$c48 = peg$literalExpectation('E', false),
+    peg$c46 = peg$classExpectation([" ", "\t"], false, false),
+    peg$c47 = "E",
+    peg$c48 = peg$literalExpectation("E", false),
     peg$c49 = function () {
-      return 'Exam ';
+      return "Exam ";
     },
-    peg$c50 = 'Q',
-    peg$c51 = peg$literalExpectation('Q', false),
+    peg$c50 = "Q",
+    peg$c51 = peg$literalExpectation("Q", false),
     peg$c52 = function () {
-      return 'Moodle Quiz ';
+      return "Moodle Quiz ";
     },
-    peg$c53 = 'H',
-    peg$c54 = peg$literalExpectation('H', false),
+    peg$c53 = "H",
+    peg$c54 = peg$literalExpectation("H", false),
     peg$c55 = function () {
-      return 'Moodle Homework ';
+      return "Moodle Homework ";
     },
-    peg$c56 = 'S',
-    peg$c57 = peg$literalExpectation('S', false),
+    peg$c56 = "S",
+    peg$c57 = peg$literalExpectation("S", false),
     peg$c58 = function () {
-      return 'Seminar';
+      return "Seminar";
     },
-    peg$c59 = 'L',
-    peg$c60 = peg$literalExpectation('L', false),
+    peg$c59 = "L",
+    peg$c60 = peg$literalExpectation("L", false),
     peg$c61 = function () {
-      return 'Laboratory';
+      return "Laboratory";
     },
-    peg$c62 = 'P',
-    peg$c63 = peg$literalExpectation('P', false),
+    peg$c62 = "P",
+    peg$c63 = peg$literalExpectation("P", false),
     peg$c64 = function () {
-      return 'Practicum';
+      return "Practicum";
     },
     peg$c65 = function () {
-      return 'start';
+      return "start";
     },
-    peg$c66 = 'F',
-    peg$c67 = peg$literalExpectation('F', false),
+    peg$c66 = "F",
+    peg$c67 = peg$literalExpectation("F", false),
     peg$c68 = function () {
-      return 'end';
+      return "end";
     },
-    peg$c69 = '#',
-    peg$c70 = peg$literalExpectation('#', false),
+    peg$c69 = "#",
+    peg$c70 = peg$literalExpectation("#", false),
     peg$c71 = peg$anyExpectation(),
     peg$c72 = function () {
-      return 'comment';
+      return "comment";
     },
-    peg$c73 = ' ',
-    peg$c74 = peg$literalExpectation(' ', false),
-    peg$c75 = '\t',
-    peg$c76 = peg$literalExpectation('\t', false),
-    peg$c77 = '\r\n',
-    peg$c78 = peg$literalExpectation('\r\n', false),
-    peg$c79 = '\n',
-    peg$c80 = peg$literalExpectation('\n', false),
-    peg$c81 = '\r',
-    peg$c82 = peg$literalExpectation('\r', false),
+    peg$c73 = " ",
+    peg$c74 = peg$literalExpectation(" ", false),
+    peg$c75 = "\t",
+    peg$c76 = peg$literalExpectation("\t", false),
+    peg$c77 = "\r\n",
+    peg$c78 = peg$literalExpectation("\r\n", false),
+    peg$c79 = "\n",
+    peg$c80 = peg$literalExpectation("\n", false),
+    peg$c81 = "\r",
+    peg$c82 = peg$literalExpectation("\r", false),
     peg$c83 = function () {
-      return 'EOF';
+      return "EOF";
     },
     peg$currPos = 0,
     peg$savedPos = 0,
@@ -333,10 +333,10 @@ function peg$parse(input, options) {
     peg$silentFails = 0,
     peg$result;
 
-  if ('startRule' in options) {
+  if ("startRule" in options) {
     if (!(options.startRule in peg$startRuleFunctions)) {
       throw new Error(
-        'Can\'t start parsing from rule "' + options.startRule + '".',
+        "Can't start parsing from rule \"" + options.startRule + '".',
       );
     }
 
@@ -374,12 +374,12 @@ function peg$parse(input, options) {
   }
 
   function peg$literalExpectation(text, ignoreCase) {
-    return { type: 'literal', text: text, ignoreCase: ignoreCase };
+    return { type: "literal", text: text, ignoreCase: ignoreCase };
   }
 
   function peg$classExpectation(parts, inverted, ignoreCase) {
     return {
-      type: 'class',
+      type: "class",
       parts: parts,
       inverted: inverted,
       ignoreCase: ignoreCase,
@@ -387,19 +387,19 @@ function peg$parse(input, options) {
   }
 
   function peg$anyExpectation() {
-    return { type: 'any' };
+    return { type: "any" };
   }
 
   function peg$endExpectation() {
-    return { type: 'end' };
+    return { type: "end" };
   }
 
   function peg$otherExpectation(description) {
-    return { type: 'other', description: description };
+    return { type: "other", description: description };
   }
 
   function peg$computePosDetails(pos) {
-    var details = peg$posDetailsCache[pos],
+    let details = peg$posDetailsCache[pos],
       p;
 
     if (details) {
@@ -433,7 +433,7 @@ function peg$parse(input, options) {
   }
 
   function peg$computeLocation(startPos, endPos) {
-    var startPosDetails = peg$computePosDetails(startPos),
+    const startPosDetails = peg$computePosDetails(startPos),
       endPosDetails = peg$computePosDetails(endPos);
 
     return {
@@ -477,7 +477,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseExpression() {
-    var s0, s1, s2, s3;
+    let s0, s1, s2, s3;
 
     s0 = peg$currPos;
     s1 = peg$parseSpacing();
@@ -514,7 +514,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseRule() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8;
+    let s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
     s0 = peg$currPos;
     s1 = peg$parseExamActivity();
@@ -645,7 +645,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseExamActivity() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseEXAM_ACTIVITY_CODE();
@@ -668,7 +668,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleQuizActivity() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseMOODLE_QUIZ_ACTIVITY_CODE();
@@ -691,7 +691,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleQuizOpenTime() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = peg$parseTiming();
@@ -707,7 +707,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleQuizCloseTime() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = peg$parseTiming();
@@ -723,7 +723,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleHomeworkActivity() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseMOODLE_HOMEWORK_ACTIVITY_CODE();
@@ -746,7 +746,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleHomeworkAllowSubmissionsTime() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = peg$parseTiming();
@@ -762,7 +762,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleHomeworkDueTime() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = peg$parseTiming();
@@ -778,7 +778,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMoodleHomeworkCutoffTime() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = peg$parseTiming();
@@ -794,7 +794,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseActivity() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     peg$silentFails++;
     s0 = peg$currPos;
@@ -825,7 +825,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseTiming() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseMeetingSequence();
@@ -851,7 +851,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseActivityCode() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     s1 = peg$parseEXAM_ACTIVITY_CODE();
@@ -871,7 +871,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMeetingSequence() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     peg$silentFails++;
     s0 = peg$currPos;
@@ -908,7 +908,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseTimeModifier() {
-    var s0, s1, s2, s3, s4, s5, s6;
+    let s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
     s1 = peg$parseMEETING_START();
@@ -1008,7 +1008,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseDeltaTime() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$parseInteger();
@@ -1071,7 +1071,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseHHMM() {
-    var s0, s1, s2, s3, s4;
+    let s0, s1, s2, s3, s4;
 
     s0 = peg$currPos;
     s1 = peg$currPos;
@@ -1207,7 +1207,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseInteger() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     peg$silentFails++;
     s0 = peg$currPos;
@@ -1254,7 +1254,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parse_() {
-    var s0, s1;
+    let s0, s1;
 
     peg$silentFails++;
     s0 = [];
@@ -1291,7 +1291,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseEXAM_ACTIVITY_CODE() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 69) {
@@ -1313,7 +1313,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMOODLE_QUIZ_ACTIVITY_CODE() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 81) {
@@ -1335,7 +1335,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMOODLE_HOMEWORK_ACTIVITY_CODE() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 72) {
@@ -1357,7 +1357,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseSEMINAR_MEETING() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 83) {
@@ -1379,7 +1379,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseLABORATORY_MEETING() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 76) {
@@ -1401,7 +1401,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parsePRACTICUM_MEETING() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 80) {
@@ -1423,7 +1423,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMEETING_START() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 83) {
@@ -1445,7 +1445,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseMEETING_END() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 70) {
@@ -1467,7 +1467,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseSpacing() {
-    var s0, s1;
+    let s0, s1;
 
     s0 = [];
     s1 = peg$parseSpace();
@@ -1486,7 +1486,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseComment() {
-    var s0, s1, s2, s3, s4, s5;
+    let s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 35) {
@@ -1590,7 +1590,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseSpace() {
-    var s0;
+    let s0;
 
     if (input.charCodeAt(peg$currPos) === 32) {
       s0 = peg$c73;
@@ -1620,7 +1620,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseEndOfLine() {
-    var s0;
+    let s0;
 
     if (input.substr(peg$currPos, 2) === peg$c77) {
       s0 = peg$c77;
@@ -1658,7 +1658,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseEndOfFile() {
-    var s0, s1, s2;
+    let s0, s1, s2;
 
     s0 = peg$currPos;
     s1 = peg$currPos;

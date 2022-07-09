@@ -1,6 +1,6 @@
-var MoodleActivity = require("../models/moodle_activity");
-var MoodleQuiz = require("../models/moodle_quiz");
-var MoodleAssignment = require("../models/moodle_assignment");
+var MoodleActivity = require("../models/MoodleActivity");
+var MoodleQuiz = require("../models/MoodleQuiz");
+var MoodleAssignment = require("../models/MoodleAssignment");
 var archiver = require("archiver");
 var fs = require("fs");
 var path = require("path");
@@ -82,7 +82,9 @@ function fetchActivities(file_path) {
     if (err) {
       throw err;
     }
-    for (var obj of data["moodle_backup"]["information"][0]["contents"][0]["activities"][0]["activity"]) {
+    for (var obj of data["moodle_backup"]["information"][0]["contents"][0][
+      "activities"
+    ][0]["activity"]) {
       switch (obj.modulename[0]) {
         case "quiz":
           quiz_info = fetchQuizInfo(file_path, obj.directory[0]);

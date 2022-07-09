@@ -1,4 +1,4 @@
-const MoodleActivity = require('./moodleActivity');
+const MoodleActivity = require("./moodleActivity");
 
 class MoodleQuiz extends MoodleActivity {
   constructor(
@@ -9,10 +9,12 @@ class MoodleQuiz extends MoodleActivity {
     directory,
     timeOpen,
     timeClose,
+    timeLimit,
   ) {
     super(title, moduleId, sectionId, moduleName, directory);
     this.timeOpen = timeOpen;
     this.timeClose = timeClose;
+    this.timeLimit = timeLimit;
   }
   getTimeOpen() {
     return this.timeOpen;
@@ -25,6 +27,13 @@ class MoodleQuiz extends MoodleActivity {
   }
   setTimeClose(timeClose) {
     this.timeClose = timeClose;
+  }
+
+  getTimeLimit() {
+    return this.timeLimit;
+  }
+  setTimeLimit(timeLimit) {
+    this.timeLimit = timeLimit;
   }
 }
 
