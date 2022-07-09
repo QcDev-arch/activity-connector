@@ -109,3 +109,4 @@ mbzPackages/
 
 # Mac folder system
 **/.DS_Store
+.idea/
