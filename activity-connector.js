@@ -14,7 +14,7 @@ const {
   repackageToMBZ,
 } = require("./app/utils/xmlReader");
 const {SEMESTERS} = require("./app/utils/constants");
-const MoodleAssignment = require("./app/models/MoodleAssignment");
+const MoodleAssignment = require("./app/models/moodleAssignment");
 const { InvalidSemesterSeason } = require("./app/exceptions");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
