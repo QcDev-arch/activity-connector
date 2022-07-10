@@ -9,10 +9,12 @@ class MoodleAssignment extends MoodleActivity {
     directory,
     duedate,
     allowsubmissionsfromdate,
+    cutoffdate
   ) {
     super(title, moduleid, sectionid, modulename, directory);
     this.duedate = duedate;
     this.allowsubmissionsfromdate = allowsubmissionsfromdate;
+    this.cutoffdate = cutoffdate
   }
   getDueDate() {
     return this.duedate;
@@ -25,6 +27,14 @@ class MoodleAssignment extends MoodleActivity {
   }
   getAllowSubmissionsFromDate() {
     return this.allowsubmissionsfromdate;
+  }
+
+  getCutoffDate() {
+    return this.cutoffdate
+  }
+
+  setCutoffDate(cutoffdate) {
+    this.cutoffdate = cutoffdate
   }
 }
 

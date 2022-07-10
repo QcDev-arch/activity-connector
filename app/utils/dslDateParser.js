@@ -1,64 +1,6 @@
-const DSLParser = require('./dsl-parser');
-const iCalParser = require('./iCalParser');
-const fs = require('fs');
-const MoodleActivity = require('../app/models/moodle_activity');
 const moment = require('moment');
-const { CalendarActivityNotFound } = require('../app/exceptions');
-const {
-  fetchActivities,
-  repackageToMBZ,
-  updateActivities,
-} = require('./xmlReader');
-const MoodleQuiz = require('../app/models/moodle_quiz');
+const { CalendarActivityNotFound } = require('../exceptions');
 
-var path =
-  'data/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu.mbz';
-var new_path =
-  'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/';
-
-// Uncomment the lines below to test in the terminal using "node ./utils/dslDateParser.js"
-const test = async function () {
-  var string = fs.readFileSync('./data/test.dsl', { encoding: 'utf8' });
-  var ical = new iCalParser('', 'LOG210', '01', '2022', '2');
-  var calendarActivities = await ical.parse();
-  var newTimes = getListModifiedTimes(
-    calendarActivities,
-    DSLParser.parse(string)[1],
-  );
-  console.log(newTimes);
-
-  var activities = fetchActivities(
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu',
-  );
-  console.log(activities);
-
-  for (const obj of newTimes) {
-    if (obj.activity.includes('Quiz')) {
-      var index = Number.parseInt(obj.activity.split(' ')[2]) - 1;
-      let i = 0;
-      for (var activity of activities) {
-        if (activity instanceof MoodleQuiz) {
-          if (i == index) {
-            activity.setTimeOpen(`${obj.open.getTime() / 1000}`);
-            activity.setTimeClose(`${obj.close.getTime() / 1000}`);
-            break;
-          }
-          i++;
-        }
-      }
-    }
-  }
-  console.log(activities);
-
-  updateActivities(
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/',
-    activities,
-  );
-  repackageToMBZ(
-    'tmp/backup-moodle2-course-17014-s20222-log210-99-20220619-1506-nu/',
-  );
-};
-// test()
 
 // Parses the calendar activities and peg grammar to return an array containing the new dates to change for each activity
 // This is the main function to call to change the actual dates of moodle activities.
@@ -79,6 +21,7 @@ const getListModifiedTimes = function (calendarActivities, pegObj) {
 };
 
 // Parses the peg obj and returns the modified dates for a quiz
+/* istanbul ignore next */
 const getNewQuizDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -105,11 +48,9 @@ const getNewQuizDates = function (obj, calendarActivities) {
 
   // Get modified open date
   var openDate = modifyTime(openCalendarAct, openModifier, openTimeObj);
-  // console.log("New open date: ", openDate.toDate())
 
   // Get modified close date
   var closeDate = modifyTime(closeCalendarAct, closeModifier, closeTimeObj);
-  // console.log("New close date: ", closeDate.toDate())
 
   return {
     open: openDate.toDate(),
@@ -118,6 +59,7 @@ const getNewQuizDates = function (obj, calendarActivities) {
 };
 
 // Parses the peg obj and returns the modified dates for an exam
+/* istanbul ignore next */
 const getNewExamDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -140,6 +82,7 @@ const getNewExamDates = function (obj, calendarActivities) {
 };
 
 // Parses the peg obj and returns the modified dates for a homework
+/* istanbul ignore next */
 const getNewHomeworkDates = function (obj, calendarActivities) {
   // Get pegObj info open
   const [openActivityName, openActivityNumber] = obj.open.activity.split(' ');
@@ -177,15 +120,12 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
 
   // Get modified open date
   var openDate = modifyTime(openCalendarAct, openModifier, openTimeObj);
-  // console.log("New open date: ", openDate.toDate())
 
   // Get modified due date
   var dueDate = modifyTime(dueCalendarAct, dueModifier, dueTimeObj);
-  // console.log("New due date: ", dueDate.toDate())
 
   // Get modified cutoff date
   var cutoffDate = modifyTime(cutoffCalendarAct, cutoffModifier, cutoffTimeObj);
-  // console.log("New cutoff date: ", cutoffDate.toDate())
 
   return {
     open: openDate.toDate(),
@@ -195,6 +135,7 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
 };
 
 // Get calendar activity based on the DSL activity name and its number.
+/* istanbul ignore next */
 const getCalendarActivity = function (
   calendarActivities,
   activityName,
@@ -226,6 +167,7 @@ const getCalendarActivity = function (
 };
 
 // Returns a modified time based on the peg object modifier and time object (if present)
+/* istanbul ignore next */
 const modifyTime = function (calendarAct, modifier, timeObj) {
   var newDate;
   switch (modifier) {
