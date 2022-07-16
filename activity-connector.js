@@ -55,7 +55,7 @@ program
   .description(`Outputs all activities from a mbz directory
 Example: node activity-connector.js print-dir --path ./path/to/directory`)
   .requiredOption(
-    "--path <directory>",
+    "-p, --path <directory>",
     "(required) the directory to the extracted Moodle files.",
   )
   .action(function (options) {
@@ -81,7 +81,7 @@ program
     "-s --semester <season>",
     "(required) the semester's season. The options are Winter, Summer or Fall",
   )
-  .option("-t, --typeact", "the activity type (such as C, Labo or TP)", "")
+  .option("-t, --typeact <string>", "the activity type (such as C, Labo or TP)", "")
   .action(function (options) {
     try {
       let icsParser = new iCalParser(
@@ -121,7 +121,7 @@ Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -
     "-s --semester <season>",
     "(required) the semester's season. The options are Winter, Summer or Fall",
   )
-  .option("-t, --typeact", "the activity type (such as C, Labo or TP)", "")
+  .option("-t, --typeact <string>", "the activity type (such as C, Labo or TP)", "")
   .action(async function (options) {
     try {
       let string = fs.readFileSync(options.dslpath, { encoding: "utf8" });

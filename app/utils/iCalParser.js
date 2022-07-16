@@ -24,7 +24,6 @@ class iCalParser {
         `Groupe=${this.group}&` +
         `Session=${this.year + this.semesterSeason}&`,
     );
-
     const url = await nodeICalParser.async.fromURL(
       BASE_URL + params.toString(),
     );
@@ -32,11 +31,11 @@ class iCalParser {
     var seminars = [];
     var practicums = [];
     var laboratories = [];
-
+    
     for (const event of Object.values(url)) {
       if (event.type == "VEVENT") {
         switch (event.categories[0]) {
-          case ICAL_ACTIVITY_TYPES.SEMINAR: // categories: [ 'C        ' ] -> very doodoo
+          case ICAL_ACTIVITY_TYPES.SEMINAR:
             seminars.push(new Seminar(event));
             break;
           case ICAL_ACTIVITY_TYPES.PRACTICUM:
@@ -44,6 +43,9 @@ class iCalParser {
             break;
           case ICAL_ACTIVITY_TYPES.LABORATORY:
             laboratories.push(new Laboratory(event));
+            break;
+          case ICAL_ACTIVITY_TYPES.FINAL_EXAM:
+            console.log("Final exam currently not supported. Please change the final exam dates on Moodle manually.")
             break;
           default:
             throw "Not a valid activity type!";

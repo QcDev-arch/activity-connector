@@ -47,6 +47,7 @@ const ICAL_ACTIVITY_TYPES = {
   SEMINAR: "C        ", // literally the output
   PRACTICUM: "TP",
   LABORATORY: "Labo",
+  FINAL_EXAM: "F"
 };
 
 const SEMESTERS = {
