@@ -46,8 +46,8 @@ test("Get the list of modified times", () => {
     {
       activity: "Moodle Homework 1",
       open: "2022-05-17T15:30:00.000Z",
-      due: "2022-05-24T03:55:00.000Z",
-      cutoff: "2022-05-24T03:55:00.000Z",
+      due: "2022-05-23T23:55:00.000Z",
+      cutoff: "2022-05-23T23:55:00.000Z",
     },
     { activity: "Exam 1", open: "2022-07-14T12:30:00.000Z" },
   ];
