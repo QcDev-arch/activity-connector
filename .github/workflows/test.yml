@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    node-version: [18.x]
 
     strategy:
       matrix:
@@ -17,6 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: yarn
+        run: npm
       - name: Run tests
-        run: yarn test
+        run: npm test
