@@ -192,13 +192,13 @@ const modifyTime = function (calendarAct, modifier, timeObj) {
   let newDate;
   switch (modifier) {
     case DATES.START_DATE:
-      newDate = moment(calendarAct.startDate);
+      newDate = moment(calendarAct.startDate).utcOffset(0);
       break;
     case DATES.END_DATE:
-      newDate = moment(calendarAct.endDate);
+      newDate = moment(calendarAct.endDate).utcOffset(0);
       break;
     case undefined:
-      newDate = moment(calendarAct.startDate);
+      newDate = moment(calendarAct.startDate).utcOffset(0);
   }
   if (timeObj) {
     switch (timeObj.modifier) {

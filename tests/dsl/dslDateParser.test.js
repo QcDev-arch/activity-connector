@@ -3,6 +3,7 @@ const { getListModifiedTimes } = require("../../app/utils/dslDateParser");
 const iCalParser = require("../../app/utils/iCalParser");
 const DslParser = require("../../app/utils/dslParser");
 const fs = require("fs-extra");
+const moment = require("moment");
 var dslString;
 var activities;
 
@@ -36,30 +37,32 @@ test("Get the list of modified times", () => {
   const testTimes = [
     {
       activity: "Moodle Quiz 1",
-      open: "2022-05-05T16:00:00.000Z",
-      close: "2022-05-12T12:00:00.000Z",
+      open: moment("2022-05-05T16:00:00.000Z").toDate(),
+      close: moment("2022-05-12T12:00:00.000Z").toDate(),
     },
     {
       activity: "Moodle Quiz 2",
-      open: "2022-05-12T16:00:00.000Z",
+      open: moment("2022-05-12T16:00:00.000Z").toDate(),
+      close: moment("2022-05-18T23:55:00.000Z").toDate(),
     },
     {
       activity: "Moodle Homework 1",
-      open: "2022-05-17T15:30:00.000Z",
-      due: "2022-05-23T23:55:00.000Z",
-      cutoff: "2022-05-23T23:55:00.000Z",
+      open: moment("2022-05-17T15:30:00.000Z").toDate(),
+      due: moment("2022-05-23T23:55:00.000Z").toDate(),
+      cutoff: moment("2022-05-23T23:55:00.000Z").toDate(),
     },
-    { activity: "Exam 1", open: "2022-07-14T12:30:00.000Z" },
+    { activity: "Exam 1", open: moment("2022-07-14T12:30:00.000Z").toDate() },
   ];
 
-  expect(newTimes[0].open.toISOString()).toStrictEqual(testTimes[0].open);
-  expect(newTimes[0].close.toISOString()).toStrictEqual(testTimes[0].close);
+  expect(newTimes[0].open).toStrictEqual(testTimes[0].open);
+  expect(newTimes[0].close).toStrictEqual(testTimes[0].close);
 
-  expect(newTimes[1].open.toISOString()).toStrictEqual(testTimes[1].open);
+  expect(newTimes[1].open).toStrictEqual(testTimes[1].open);
+  expect(newTimes[1].close).toStrictEqual(testTimes[1].close);
 
-  expect(newTimes[2].open.toISOString()).toStrictEqual(testTimes[2].open);
-  expect(newTimes[2].due.toISOString()).toStrictEqual(testTimes[2].due);
-  expect(newTimes[2].cutoff.toISOString()).toStrictEqual(testTimes[2].cutoff);
+  expect(newTimes[2].open).toStrictEqual(testTimes[2].open);
+  expect(newTimes[2].due).toStrictEqual(testTimes[2].due);
+  expect(newTimes[2].cutoff).toStrictEqual(testTimes[2].cutoff);
 
-  expect(newTimes[3].open.toISOString()).toStrictEqual(testTimes[3].open);
+  expect(newTimes[3].open).toStrictEqual(testTimes[3].open);
 });
