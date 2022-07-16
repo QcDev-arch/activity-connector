@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { CalendarActivityNotFound } = require("../exceptions");
+const { CalendarActivityNotFound, DSLActivityDatesInvalid } = require("../exceptions");
 const {
   ACTIVITY_TYPES,
   ASSIGNMENT_TYPES,
@@ -61,6 +61,10 @@ const getNewQuizDates = function (obj, calendarActivities) {
   // Get modified close date
   const closeDate = modifyTime(closeCalendarAct, closeModifier, closeTimeObj);
   // console.log("New close date: ", closeDate.toDate())
+  
+  if(openDate.toDate() > closeDate.toDate()){
+    throw new DSLActivityDatesInvalid(obj.activity)
+  }
 
   return {
     open: openDate.toDate(),
@@ -149,6 +153,11 @@ const getNewHomeworkDates = function (obj, calendarActivities) {
   );
   // console.log("New cutoff date: ", cutoffDate.toDate())
 
+  if(openDate.toDate() > dueDate.toDate() || 
+  openDate.toDate() > cutoffDate.toDate() ||
+  dueDate.toDate() > cutoffDate.toDate()){
+    throw new DSLActivityDatesInvalid(obj.activity)
+  }
   return {
     open: openDate.toDate(),
     due: dueDate.toDate(),

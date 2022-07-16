@@ -24,8 +24,20 @@ class ICSCalendarActivityInvalid extends Error {
   }
 }
 
+class DSLActivityDatesInvalid extends Error{
+  constructor(activityName){
+    super(
+      `The specified dates for the DSL activity "${activityName}" are invalid. 
+Please check that the dates specified in the DSL are in the correct order
+For example, "Q1 S2 S1" is not a valid DSL because the start date is greater than the end date (Seminar 2 happens AFTER Seminar 1).`
+    )
+    this.name = "DSLActivityDatesInvalid"
+  }
+}
+
 module.exports = {
   CalendarActivityNotFound: CalendarActivityNotFound,
   InvalidSemesterSeason: InvalidSemesterSeason,
   ICSCalendarActivityInvalid: ICSCalendarActivityInvalid,
+  DSLActivityDatesInvalid: DSLActivityDatesInvalid
 };
