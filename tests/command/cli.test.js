@@ -24,12 +24,14 @@ const MBZ_PATH = "./mbzPackages";
 /*-------COMMANDER / CLI BASED TESTS--------*/
 describe("Commander based tests", () => {
   test("Extract the mbz file", async () => {
+
     let result = await cli(
       [
         "extract-mbz", "-p", "./data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz",
       ],
       ".",
     );
+
     expect(result.code).toBe(0);
   });
 
