@@ -16,9 +16,15 @@ const semesterSeason = 2;
 jest.mock("../../app/utils/iCalParser");
 
 // Mocking require that we reassigned all the previous values
-const icsParser = new iCalParser(activityTypes[0], symbol, group, year, semesterSeason);
+const icsParser = new iCalParser(
+  activityTypes[0],
+  symbol,
+  group,
+  year,
+  semesterSeason,
+);
 
-const fakeICSReturn = require('../../data/fakeData');
+const fakeICSReturn = require("../../data/fakeData");
 
 /*---------DSL DATE PARSER TEST----------*/
 

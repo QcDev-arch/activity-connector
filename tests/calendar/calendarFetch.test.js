@@ -15,7 +15,13 @@ const year = "2022";
 const semesterSeason = 2;
 
 // Mocking require that we reassigned all the previous values
-const icsParser = new iCalParser(activityTypes[0], symbol, group, year, semesterSeason);
+const icsParser = new iCalParser(
+  activityTypes[0],
+  symbol,
+  group,
+  year,
+  semesterSeason,
+);
 
 /*-------CALENDAR TESTS--------*/
 
