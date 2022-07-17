@@ -1,35 +1,33 @@
 {
-    "name": "activity-connector",
-    "version": "1.0.0",
-    "description": "Activity connector for Moodle",
-    "author": "First Last <first.last@example.com>",
-    "main": "activitiy-connector.js",
-    "bin": {
-        "activity-connector": "./activity-connector.js"
-    },
-    "scripts": {
-        "start": "node server.js",
-        "test": "jest --collectCoverage"
-    },
-    "dependencies": {
-        "archiver": "^5.3.1",
-        "commander": "^9.3.0",
-        "express": "^4.16.1",
-        "fs-extra": "^10.1.0",
-        "moment": "^2.29.4",
-        "node-ical": "^0.15.1",
-        "pegjs": "^0.10.0",
-        "tar": "^6.1.11",
-        "tar-fs": "^2.1.1",
-        "xml2js": "^0.4.23"
-    },
-    "devDependencies": {
-        "jest": "^28.1.0"
-    },
-    "jest": {
-        "coveragePathIgnorePatterns" : [
-            "<rootDir>/app/utils/dslParser",
-            "<rootDir>/app/utils/constants"
-        ]
-    }
+  "name": "activity-connector",
+  "version": "1.0.0",
+  "description": "Activity connector for Moodle",
+  "author": "First Last <first.last@example.com>",
+  "main": "activitiy-connector.js",
+  "bin": {
+    "activity-connector": "./activity-connector.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest --collectCoverage"
+  },
+  "dependencies": {
+    "archiver": "^5.3.1",
+    "commander": "^9.3.0",
+    "fs-extra": "^10.1.0",
+    "moment": "^2.29.4",
+    "node-ical": "^0.15.1",
+    "pegjs": "^0.10.0",
+    "tar": "^6.1.11",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/app/utils/dslParser",
+      "<rootDir>/app/utils/constants"
+    ]
+  }
 }
