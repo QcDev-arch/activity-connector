@@ -49,13 +49,13 @@ test("Get the list of modified times", () => {
     {
       activity: "Moodle Quiz 2",
       open: moment("2022-05-12T16:00:00.000Z").toDate(),
-      close: moment("2022-05-18T23:55:00.000Z").toDate(),
+      close: moment("2022-05-19T03:55:00.000Z").toDate(),
     },
     {
       activity: "Moodle Homework 1",
       open: moment("2022-05-17T15:30:00.000Z").toDate(),
-      due: moment("2022-05-23T23:55:00.000Z").toDate(),
-      cutoff: moment("2022-05-23T23:55:00.000Z").toDate(),
+      due: moment("2022-05-24T03:55:00.000Z").toDate(),
+      cutoff: moment("2022-05-24T03:55:00.000Z").toDate(),
     },
     { activity: "Exam 1", open: moment("2022-07-14T12:30:00.000Z").toDate() },
   ];

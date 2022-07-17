@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "jest --collectCoverage"
+    "test": "jest --collectCoverage --setTimeout=10000"
   },
   "dependencies": {
     "archiver": "^5.3.1",

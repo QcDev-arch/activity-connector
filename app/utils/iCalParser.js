@@ -24,15 +24,24 @@ class iCalParser {
         `Groupe=${this.group}&` +
         `Session=${this.year + this.semesterSeason}&`,
     );
-    const url = await nodeICalParser.async.fromURL(
+    const data = await nodeICalParser.async.fromURL(
       BASE_URL + params.toString(),
     );
 
+    return this.createData(data);
+  }
+
+  async parseFile(filePath) {
+    const data = await nodeICalParser.async.parseFile(filePath);
+    return this.createData(data);
+  }
+
+  createData(data) {
     var seminars = [];
     var practicums = [];
     var laboratories = [];
-    
-    for (const event of Object.values(url)) {
+
+    for (const event of Object.values(data)) {
       if (event.type == "VEVENT") {
         switch (event.categories[0]) {
           case ICAL_ACTIVITY_TYPES.SEMINAR:
@@ -45,7 +54,9 @@ class iCalParser {
             laboratories.push(new Laboratory(event));
             break;
           case ICAL_ACTIVITY_TYPES.FINAL_EXAM:
-            console.log("Final exam currently not supported. Please change the final exam dates on Moodle manually.")
+            console.log(
+              "Final exam currently not supported. Please change the final exam dates on Moodle manually.",
+            );
             break;
           default:
             throw "Not a valid activity type!";
@@ -65,7 +76,7 @@ class iCalParser {
       practicums: this.practicums,
       laboratories: this.laboratories,
     };
-  };
+  }
 }
 
 module.exports = iCalParser;

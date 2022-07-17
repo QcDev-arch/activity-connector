@@ -13,7 +13,7 @@ const {
   updateActivities,
   repackageToMBZ,
 } = require("./app/utils/xmlReader");
-const {SEMESTERS} = require("./app/utils/constants");
+const { SEMESTERS } = require("./app/utils/constants");
 const MoodleAssignment = require("./app/models/moodleAssignment");
 const { InvalidSemesterSeason } = require("./app/exceptions");
 
@@ -52,8 +52,10 @@ program
 program
   .command("print-dir")
   .summary("Outputs all activities from a mbz directory")
-  .description(`Outputs all activities from a mbz directory
-Example: node activity-connector.js print-dir --path ./path/to/directory`)
+  .description(
+    `Outputs all activities from a mbz directory
+Example: node activity-connector.js print-dir --path ./path/to/directory`,
+  )
   .requiredOption(
     "-p, --path <directory>",
     "(required) the directory to the extracted Moodle files.",
@@ -66,77 +68,149 @@ Example: node activity-connector.js print-dir --path ./path/to/directory`)
 program
   .command("print-ics")
   .summary("Outputs dates for a course")
-  .description(`
-  `)
-  .requiredOption(
+  .description(
+    `Parses a calendar and outputs its informations.
+
+If the -if, --icsfile option is passed to the command, the ics file will be used instead of the API. 
+Otherwise, the required options are --acronym, --group, --year and --semester (short flags are also accepted).
+
+Example: node activity-connector.js print-ics -a LOG210 -g 01 -y 2022 -s Summer
+         node activity-connector.js print-ics -if ./path/to/file.ics
+  `,
+  )
+  .option("-if, --icsfile <directory>", "the path to the ics file")
+  .option(
     "-a, --acronym <course>",
-    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .requiredOption(
+  .option(
     "-g, --group <number>",
-    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
+    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .requiredOption("-y --year <number>", "(required) the year of the course")
-  .requiredOption(
+  .option("-y --year <number>", "the year of the course")
+  .option(
     "-s --semester <season>",
-    "(required) the semester's season. The options are Winter, Summer or Fall",
+    "the semester's season. The options are Winter, Summer or Fall",
   )
-  .option("-t, --typeact <string>", "the activity type (such as C, Labo or TP)", "")
+  .option(
+    "-t, --typeact <string>",
+    "(optional) the activity type (such as C, Labo or TP)",
+    "",
+  )
   .action(function (options) {
     try {
-      let icsParser = new iCalParser(
-        options.typeact,
-        options.acronym,
-        options.group,
-        options.year,
-        getSemesterSeasonNumber(options.semester),
-      );
-      icsParser.parse().then(ics => console.log(ics));
+      let ical;
+
+      if (options.icsfile) {
+        ical = new iCalParser();
+        ical.parseFile(options.icsfile).then(ics => {
+          console.log(ics);
+        });
+      } else {
+        // Check input values
+        if (
+          !options.acronym ||
+          !options.group ||
+          !options.year ||
+          !options.semester
+        ) {
+          throw new Error(
+            "(error) Incorrect parameters passed. Please check that all the required parameters were correctly entered (use -h for help).",
+          );
+        }
+
+        ical = new iCalParser(
+          options.typeact,
+          options.acronym,
+          options.group,
+          options.year,
+          getSemesterSeasonNumber(options.semester),
+        );
+
+        ical.parse().then(ics => console.log(ics));
+      }
     } catch (err) {
       console.error(err.message);
     }
   });
 
 // node activity-connector.js parse-dsl -dp ./data/test.dsl -a LOG210 -g 01 -y 2022 -s Summer
+// node activity-connector.js parse-dsl -dp ./data/test.dsl -if ./data/Seances.ics
 program
   .command("parse-dsl")
   .summary("Parses a dsl file and outputs new dates based on a course")
   .description(
     `Parses a dsl file and outputs new dates based on a course's informations.
-Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer`)
+
+If the -if, --icsfile option is passed to the command, the ics file will be used instead of the API. 
+Otherwise, the required options are --acronym, --group, --year and --semester (short flags are also accepted).
+The -dp flag is always required.
+
+Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer
+         node activity-connector.js parse-dsl -dp ./path/to/file.dsl -if ./path/to/file.ics`,
+  )
   .requiredOption(
     "-dp, --dslpath <directory>",
     "(required) the path to the DSL file",
   )
-  .requiredOption(
+  .option("-if, --icsfile <directory>", "the path to the ics file")
+  .option(
     "-a, --acronym <course>",
-    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .requiredOption(
+  .option(
     "-g, --group <number>",
-    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
+    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .requiredOption("-y --year <number>", "(required) the year of the course")
-  .requiredOption(
+  .option("-y --year <number>", "the year of the course")
+  .option(
     "-s --semester <season>",
-    "(required) the semester's season. The options are Winter, Summer or Fall",
+    "the semester's season. The options are Winter, Summer or Fall",
   )
-  .option("-t, --typeact <string>", "the activity type (such as C, Labo or TP)", "")
+  .option(
+    "-t, --typeact <string>",
+    "(optional) the activity type (such as C, Labo or TP)",
+    "",
+  )
   .action(async function (options) {
     try {
       let string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
-      let ical = new iCalParser(
-        options.typeact,
-        options.acronym,
-        options.group,
-        options.year,
-        getSemesterSeasonNumber(options.semester),
-      );
-      ical.parse().then(ics => {
-        console.log(
-          dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+      let ical;
+
+      if (options.icsfile) {
+        ical = new iCalParser();
+        ical.parseFile(options.icsfile).then(ics => {
+          console.log(
+            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+          );
+        });
+      } else {
+        // Check input values
+        if (
+          !options.acronym ||
+          !options.group ||
+          !options.year ||
+          !options.semester
+        ) {
+          throw new Error(
+            "(error) Incorrect parameters passed. Please check that all the required parameters were correctly entered (use -h for help).",
+          );
+        }
+
+        ical = new iCalParser(
+          options.typeact,
+          options.acronym,
+          options.group,
+          options.year,
+          getSemesterSeasonNumber(options.semester),
         );
-      });
+
+        ical.parse().then(ics => {
+          console.log(
+            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+          );
+        });
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -152,21 +226,25 @@ Moodle, the dsl file and informations about the course.
 
 Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer`,
   )
-  .requiredOption("-mp --mbzpath <directory>", "(required) the path of the mbz file")
+  .requiredOption(
+    "-mp --mbzpath <directory>",
+    "(required) the path of the mbz file",
+  )
   .requiredOption(
     "-dp, --dslpath <directory>",
     "(required) the path to the DSL file",
   )
-  .requiredOption(
+  .option("-if, --icsfile <directory>", "the path to the ics file")
+  .option(
     "-a, --acronym <course>",
     "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
-  .requiredOption(
+  .option(
     "-g, --group <number>",
     "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .requiredOption("-y --year <number>", "(required) the year of the course")
-  .requiredOption(
+  .option("-y --year <number>", "(required) the year of the course")
+  .option(
     "-s --semester <season>",
     "(required) the semester's season. The options are Winter, Summer or Fall",
   )
@@ -176,14 +254,33 @@ Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y
       var string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
 
       console.log("Fetching .ics calendar...");
-      var ical = new iCalParser(
-        "",
-        options.acronym,
-        options.group,
-        options.year,
-        getSemesterSeasonNumber(options.semester),
-      );
-      var calendarActivities = await ical.parse();
+      let ical;
+      var calendarActivities;
+      if (options.icsfile) {
+        ical = new iCalParser();
+        calendarActivities = await ical.parseFile(options.icsfile);
+      } else {
+        // Check input values
+        if (
+          !options.acronym ||
+          !options.group ||
+          !options.year ||
+          !options.semester
+        ) {
+          throw new Error(
+            "(error) Incorrect parameters passed. Please check that all the required parameters were correctly entered (use -h for help).",
+          );
+        }
+
+        ical = new iCalParser(
+          "",
+          options.acronym,
+          options.group,
+          options.year,
+          getSemesterSeasonNumber(options.semester),
+        );
+        calendarActivities = await ical.parse();
+      }
 
       console.log("Parse DSL and getting new dates...");
       var newTimes = dslDateParser.getListModifiedTimes(

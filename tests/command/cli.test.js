@@ -26,9 +26,7 @@ describe("Commander based tests", () => {
   test("Extract the mbz file", async () => {
     let result = await cli(
       [
-        "extract-mbz",
-        "-p",
-        "./data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz",
+        "extract-mbz", "-p", "./data/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu.mbz",
       ],
       ".",
     );
@@ -38,9 +36,7 @@ describe("Commander based tests", () => {
   test("Outputs all activities from a mbz directory", async () => {
     let result = await cli(
       [
-        "print-dir",
-        "--path",
-        "./tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu",
+        "print-dir", "--path", "./tmp/backup-moodle2-course-1677-s20143-log792-09-20151102-1508-nu",
       ],
       ".",
     );
@@ -50,15 +46,7 @@ describe("Commander based tests", () => {
   test("Outputs dates for a course", async () => {
     let result = await cli(
       [
-        "print-ics",
-        "--acronym",
-        "LOG210",
-        "--group",
-        "01",
-        "--year",
-        "2022",
-        "--semester",
-        "Summer",
+        "print-ics", "--acronym", "LOG210", "--group", "01", "--year", "2022", "--semester", "Summer",
       ],
       ".",
     );
@@ -88,19 +76,8 @@ describe("Commander based tests", () => {
   test("Create a new updated mbz file", async () => {
     let result = await cli(
       [
-        "create",
-        "-mp",
-        "./data/backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz",
-        "-dp",
-        "./data/test.dsl",
-        "-a",
-        "LOG210",
-        "-g",
-        "01",
-        "-y",
-        "2022",
-        "-s",
-        "Summer",
+        "create", "-mp", "./data/backup-moodle2-course-17014-s20222-log210-99-20220703-1253-nu.mbz", 
+        "-dp", "./data/test.dsl", "-a", "LOG210", "-g", "01", "-y", "2022", "-s", "Summer",
       ],
       ".",
     );
