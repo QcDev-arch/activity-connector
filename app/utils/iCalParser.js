@@ -17,7 +17,7 @@ class iCalParser {
     this.semesterSeason = semesterSeason;
   }
 
-  parse = async () => {
+  async parse() {
     const params = new URLSearchParams(
       `typeact=${this.typeact}&` +
         `Sigle=${this.symbol}&` +

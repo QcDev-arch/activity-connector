@@ -8,55 +8,40 @@ const {
   Practicum,
 } = require("../../app/models/calendarActivity");
 
-const activityTypes = ["", "C", "TP", "LABO"];
-const symbol = "log210";
+const activityTypes = ["", "C", "TP", "Labo"];
+const symbol = "LOG210";
 const group = "01";
-let year = "2022";
-const semesterSeason = "2";
+const year = "2022";
+const semesterSeason = 2;
+
+// Mocking require that we reassigned all the previous values
+const icsParser = new iCalParser(activityTypes[0], symbol, group, year, semesterSeason);
 
 /*-------CALENDAR TESTS--------*/
 
 test.each(activityTypes)(
   "given %p activity type as argument, return the activity",
   activityType => {
-    const parser = new iCalParser(
-      activityType,
-      symbol,
-      group,
-      year,
-      semesterSeason,
-    );
+    icsParser.typeact = activityType;
 
-    expect(parser.typeact).toBe(activityType);
-    expect(parser.symbol).toBe(symbol);
-    expect(parser.group).toBe(group);
-    expect(parser.year).toBe(year);
-    expect(parser.semesterSeason).toBe(semesterSeason);
+    expect(icsParser.typeact).toBe(activityType);
+    expect(icsParser.symbol).toBe(symbol);
+    expect(icsParser.group).toBe(group);
+    expect(icsParser.year).toBe(year);
+    expect(icsParser.semesterSeason).toBe(semesterSeason);
   },
 );
 
-test("invalid activity", () => {
-  const typeact = "";
-  year = "2023";
-  const parser = new iCalParser(typeact, symbol, group, year, semesterSeason);
-
-  return parser.parse().then(data => {
-    expect(data).toBeNull();
-  });
-});
-
 describe("Parser test", () => {
   test("Parser test", () => {
-    // Fetch and parse calendar
-    let icsParser = new iCalParser("", "LOG210", "01", "2022", 2);
+    icsParser.typeact = activityTypes[0];
     return icsParser.parse().then(ics => {
       expect(ics).toEqual(expect.anything());
     });
   });
 
   test("Error invalid type", () => {
-    // Fetch and parse calendar
-    let icsParser = new iCalParser(null, null, null, null, null);
+    icsParser.typeact = null;
     return icsParser.parse().then(ics => {
       expect(ics).toBeNull();
     });
