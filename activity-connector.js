@@ -75,8 +75,7 @@ If the -if, --icsfile option is passed to the command, the ics file will be used
 Otherwise, the required options are --acronym, --group, --year and --semester (short flags are also accepted).
 
 Example: node activity-connector.js print-ics -a LOG210 -g 01 -y 2022 -s Summer
-         node activity-connector.js print-ics -if ./path/to/file.ics
-  `,
+         node activity-connector.js print-ics -if ./path/to/file.ics`,
   )
   .option("-if, --icsfile <directory>", "the path to the ics file")
   .option(
@@ -224,7 +223,8 @@ program
     `Create a new updated mbz file using the mbz backup from
 Moodle, the dsl file and informations about the course.
 
-Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer`,
+Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y 2022 -s Summer
+         create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -if ./path/to/file.ics`,
   )
   .requiredOption(
     "-mp --mbzpath <directory>",
@@ -237,16 +237,16 @@ Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y
   .option("-if, --icsfile <directory>", "the path to the ics file")
   .option(
     "-a, --acronym <course>",
-    "(required) the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
+    "the course's acronym (e.g. LOG210, GTI745, MEC200, ...)",
   )
   .option(
     "-g, --group <number>",
-    "(required) the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
+    "the group number for the course (if the group is a single digit, add a 0 in front e.g. 01, 02, ...)",
   )
-  .option("-y --year <number>", "(required) the year of the course")
+  .option("-y --year <number>", "the year of the course")
   .option(
     "-s --semester <season>",
-    "(required) the semester's season. The options are Winter, Summer or Fall",
+    "the semester's season. The options are Winter, Summer or Fall",
   )
   .action(async function (options) {
     try {

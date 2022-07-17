@@ -6,18 +6,26 @@ var fs = require("fs");
 var path = require("path");
 var tar = require("tar");
 var xml2js = require("xml2js");
-var base_path = "./tmp";
-var base_path_mbz_packages = "./mbzPackages";
+var basePath = process.env.JEST_TESTING ? "./tmp_tests": "./tmp";
+var basePathMbzPackages = process.env.JEST_TESTING ? "./mbzPackages_tests" : "./mbzPackages";
+
+function setBasePath(newPath){
+  basePath = newPath
+}
+
+function setBasePathMbzPackages(newPath){
+  basePathMbzPackages = newPath
+}
 
 function extractTar(file_path) {
   // Checks if tmp directory exists
-  if (!fs.existsSync(base_path)) {
-    fs.mkdirSync(base_path);
+  if (!fs.existsSync(basePath)) {
+    fs.mkdirSync(basePath);
   }
   // Check if mbz file exists, then extract to tmp directory
   if (file_path.endsWith(".mbz")) {
     var new_directory = path.join(
-      base_path,
+      basePath,
       file_path.split("data").pop().replace(".mbz", ""),
     );
     if (!fs.existsSync(new_directory)) {
@@ -179,8 +187,8 @@ function updateActivities(file_path, activities) {
 
 async function repackageToMBZ(file_path) {
   // Checks if tmp directory exists
-  if (!fs.existsSync(base_path_mbz_packages)) {
-    fs.mkdirSync(base_path_mbz_packages);
+  if (!fs.existsSync(basePathMbzPackages)) {
+    fs.mkdirSync(basePathMbzPackages);
   }
 
   var updatedate = new Date();
@@ -193,7 +201,7 @@ async function repackageToMBZ(file_path) {
     "_" +
     updatedate.getMinutes();
   var mbzPath = path.join(
-    "mbzPackages",
+    basePathMbzPackages,
     "moodle-backup-" + datestring + ".mbz",
   );
   var output = fs.createWriteStream(mbzPath);
@@ -218,4 +226,6 @@ module.exports = {
   fetchActivities: fetchActivities,
   updateActivities: updateActivities,
   repackageToMBZ: repackageToMBZ,
+  setBasePath: setBasePath,
+  setBasePathMbzPackages: setBasePathMbzPackages
 };

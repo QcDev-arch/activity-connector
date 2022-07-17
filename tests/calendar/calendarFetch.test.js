@@ -46,6 +46,13 @@ describe("Parser test", () => {
     });
   });
 
+  test("Parser test ics file", () => {
+    icsParser.typeact = activityTypes[0];
+    return icsParser.parseFile("./data/Seances.ics").then(ics => {
+      expect(ics).toEqual(expect.anything());
+    });
+  });
+
   test("Error invalid type", () => {
     icsParser.typeact = null;
     return icsParser.parse().then(ics => {
