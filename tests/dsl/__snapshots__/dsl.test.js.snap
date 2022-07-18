@@ -1,0 +1,549 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test parser basic 1`] = `
+Array [
+  Array [],
+  Array [
+    Object {
+      "activity": "Exam 1",
+      "open": Object {
+        "activity": "Seminar 2",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+  ],
+  "EOF",
+]
+`;
+
+exports[`Test parser with a lot of stuff 1`] = `
+Array [
+  Array [],
+  Array [
+    Object {
+      "activity": "Exam 1",
+      "open": Object {
+        "activity": "Seminar 2",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "+",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "w",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Seminar 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 30,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Homework 1",
+      "cutoff": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "due": Object {
+        "activity": "Laboratory 3",
+        "modifier": "start",
+        "time": Object {
+          "at": "23:55",
+          "modifier": "-",
+          "number": 1,
+          "type": "d",
+        },
+      },
+      "open": Object {
+        "activity": "Laboratory 2",
+        "modifier": "end",
+      },
+    },
+    Object {
+      "activity": "Moodle Quiz 1",
+      "close": Object {
+        "activity": "Practicum 2",
+        "modifier": "start",
+        "time": Object {
+          "modifier": "-",
+          "number": 15,
+          "type": "m",
+        },
+      },
+      "open": Object {
+        "activity": "Seminar 1",
+        "modifier": "end",
+        "time": Object {
+          "modifier": "+",
+          "number": 1,
+          "type": "h",
+        },
+      },
+    },
+    Object {
+      "activity": "Exam 2",
+      "open": Object {
+        "activity": "Seminar 13",
+      },
+    },
+  ],
+  "EOF",
+]
+`;

@@ -8,6 +8,7 @@
     "activity-connector": "./activity-connector.js"
   },
   "scripts": {
+    "build": "pegjs -o ./app/utils/dslParser.js ./app/utils/grammar/dsl.pegjs",
     "start": "node server.js",
     "test": "jest --collectCoverage --setTimeout=10000 -i"
   },
