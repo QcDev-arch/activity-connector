@@ -29,14 +29,14 @@
   ],
   "main": "activity-connector.js",
   "bin": {
-    "activity-connector": "activity-connector.js"
+    "a-c": "./activity-connector.js",
+    "activity-connector": "./activity-connector.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "keywords": [
-    "activity",
-    "connector"
+    "activity-connector"
   ],
   "scripts": {
     "build": "pegjs -o ./app/utils/dslParser.js ./app/utils/grammar/dsl.pegjs",
