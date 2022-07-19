@@ -27,10 +27,17 @@
       "url": "https://github.com/fuhrmanator"
     }
   ],
-  "main": "activitiy-connector.js",
+  "main": "activity-connector.js",
   "bin": {
-    "activity-connector": "./activity-connector.js"
+    "activity-connector": "activity-connector.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "activity",
+    "connector"
+  ],
   "scripts": {
     "build": "pegjs -o ./app/utils/dslParser.js ./app/utils/grammar/dsl.pegjs",
     "start": "node activity-connector.js",

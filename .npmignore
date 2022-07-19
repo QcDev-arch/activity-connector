@@ -1,0 +1,18 @@
+# Webstorm
+.idea/
+
+# Tmp folder
+tmp/
+mbzPackages/
+tmp_tests/
+mbzPackages_tests/
+data/
+
+# Tests
+tests/
+
+# Linter
+.prettierrc.js
+
+# gitignore
+.gitignore
