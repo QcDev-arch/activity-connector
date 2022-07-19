@@ -16,6 +16,7 @@ const {
 const { SEMESTERS } = require("./app/utils/constants");
 const MoodleAssignment = require("./app/models/moodleAssignment");
 const { InvalidSemesterSeason } = require("./app/exceptions");
+const { exit } = require("process");
 
 const getSemesterSeasonNumber = function (semesterSeason) {
   switch (semesterSeason) {
@@ -173,14 +174,14 @@ Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -
   )
   .action(async function (options) {
     try {
-      let string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
+      let activityPlan = fs.readFileSync(options.dslpath, { encoding: "utf8" });
       let ical;
 
       if (options.icsfile) {
         ical = new iCalParser();
         ical.parseFile(options.icsfile).then(ics => {
           console.log(
-            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(activityPlan)[1]),
           );
         });
       } else {
@@ -206,7 +207,7 @@ Example: node activity-connector.js parse-dsl -dp ./path/to/file.dsl -a LOG210 -
 
         ical.parse().then(ics => {
           console.log(
-            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(string)[1]),
+            dslDateParser.getListModifiedTimes(ics, DSLParser.parse(activityPlan)[1]),
           );
         });
       }
@@ -251,7 +252,7 @@ Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y
   .action(async function (options) {
     try {
       console.log("Fetching DSL...");
-      var string = fs.readFileSync(options.dslpath, { encoding: "utf8" });
+      var activityPlan = fs.readFileSync(options.dslpath, { encoding: "utf8" });
 
       console.log("Fetching .ics calendar...");
       let ical;
@@ -283,10 +284,20 @@ Example: create -mp ./path/to/file.mbz -dp ./path/to/file.dsl -a LOG210 -g 01 -y
       }
 
       console.log("Parse DSL and getting new dates...");
-      var newTimes = dslDateParser.getListModifiedTimes(
-        calendarActivities,
-        DSLParser.parse(string)[1],
-      );
+      try {
+        var newTimes = dslDateParser.getListModifiedTimes(
+          calendarActivities,
+          DSLParser.parse(activityPlan)[1],
+        );          
+      } catch (error) {
+        // console.error(`Start line ${error.location.start.line}, start column ${error.location.start.column}`);
+        // console.error(`End line ${error.location.end.line}, end column ${error.location.end.column}`);
+        console.error(`ERROR parsing plan data in ${options.dslpath} at line ${error.location.start.line}:`);
+        console.error(`${activityPlan.split("\r\n")[error.location.start.line-1]}`);
+        console.error(" ".repeat(error.location.start.column-1) + "^".repeat(error.location.end.column - error.location.start.column));
+        console.error(`${error.message}`);
+        exit(1);
+      }
 
       var newPath = path.join(
         "tmp",
