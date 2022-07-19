@@ -1,15 +1,39 @@
 {
   "name": "activity-connector",
   "version": "1.0.0",
-  "description": "Activity connector for Moodle",
-  "author": "First Last <first.last@example.com>",
+  "description": "Utility to sychronize course activities",
+  "license": "MIT",
+  "repository": "github:QcDev-arch/activity-connector",
+  "homepage": "https://www.etsmtl.ca",
+  "author": {
+    "name": "Chy Lam Trang",
+    "url": "https://github.com/generalchy"
+  },
+  "contributors": [
+    {
+      "name": "Sébastien Legault",
+      "url": "https://github.com/QcDev-arch"
+    },
+    {
+      "name": "Mayorathan K",
+      "url": "https://github.com/mayorathan"
+    },
+    {
+      "name": "Catarina Castro",
+      "url": "https://github.com/Catarina878"
+    },
+    {
+      "name": "Christopher Fuhrman",
+      "url": "https://github.com/fuhrmanator"
+    }
+  ],
   "main": "activitiy-connector.js",
   "bin": {
     "activity-connector": "./activity-connector.js"
   },
   "scripts": {
     "build": "pegjs -o ./app/utils/dslParser.js ./app/utils/grammar/dsl.pegjs",
-    "start": "node server.js",
+    "start": "node activity-connector.js",
     "test": "jest --collectCoverage --setTimeout=10000 -i"
   },
   "dependencies": {
